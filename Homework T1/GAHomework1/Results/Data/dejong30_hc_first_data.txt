@@ -1,0 +1,8 @@
+Minimum value = 0
+Maximum value= 0
+Avg Value = 0
+SD value = 0
+Minimum time = 1209.03
+Maximum time = 1259.03
+AVG time = 1231.297
+SD time = 12.4133849200133

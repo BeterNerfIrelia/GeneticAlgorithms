@@ -1,0 +1,1101 @@
+A1=function(lambda,p,k,l){
+  x=seq(k,l);
+  y=dpois(x,lambda);
+  z=dgeom(x,p);
+  par(mfrow=c(1:2));
+  barplot(y,main=expression(paste("Poisson(",lambda,")")),col="red");
+  barplot(z,main="Geometric(p)",col="blue");
+}
+
+A2a=function(x){
+  #x=c(79,71,89,57,76,64,82,67,80,81,65,73,79,79,60,58,83,74,68,78,80,78,81,76,65,70,76,58,82,59,73,72,79,87,63,74,90,69,35,83,76,61,66,71,51,57,81,57,65,81,78,77,81,81,73,75,66,56,62,75,60,74,74,70,71,56,74,63,72,81,54,72,91,92);
+  #calculam media
+  medie=mean(x);
+  #raspuns=c("Media=",medie);
+  
+  #calculam mediana
+  mediana=median(x);
+ # raspuns=c(raspuns,"Mediana=",mediana);
+  
+  
+  #calculam cvartilele 1 si 3, deoarece cvartila2=mediana
+  cvartile=quantile(x);
+  q1=as.vector(cvartile[1+1]);
+  q3=as.vector(cvartile[3+1]);
+  #raspuns=c(raspuns,"Cvartila1=",q1,"Cvartila2=",mediana,"Cvartila3=",q3);
+  
+  #calculam deviatia standard
+  stdDiv=sd(x);
+  #raspuns=c(raspuns,"Deviatie Standard=",stdDiv);
+  raspuns=c(medie,mediana,q1,mediana,q3,stdDiv);
+  return(raspuns);
+}
+
+A2b=function(x){
+  info=A2a(x);
+  #mini=info[2]-2*info[12];
+  mini=info[1]-2*info[6];
+  #maxi=info[2]+2*info[12];
+  maxi=info[1]+2*info[6];
+  i=1;
+  len=length(x);
+  while(i<=len){
+    if(x[i]<=mini){
+      x=x[-i];
+      len=len-1;
+    }else
+      if(x[i]>=maxi){
+        x=x[-i];
+        len=len-1;
+      }else
+        i=i+1;
+  }
+  return(x);
+}
+
+A2c=function(x){
+  x=A2b(x);
+  par(mfrow=c(1,1));
+  interval=seq(40,100,5);
+  hist(x,breaks=interval,right=T,col="green");
+}
+
+
+
+
+
+
+B1=function(){
+  #Vol(con)=(pi*h*r^2)/3
+  #h=3 => vol(con)=pi*(r^2) = 12.5663706144
+  vol=12.5663706144;
+  suprh=0.44444444444 # 4/9
+  
+  rezultate=c("Volum real=",vol);
+  puncte=0;
+  for(i in 1:10000){
+    x=runif(1,-2,2);
+    y=runif(1,-2,2);
+    z=runif(1,0,3);
+    if(z<=3){
+      z=z*z;
+      if(x*x+y*y<=suprh*z)
+        puncte=puncte+1;
+    }
+  }
+  #4*4=16*3=48
+  puncte=(48*puncte)/10000;
+  rerra=abs(puncte-vol)/vol;
+  rezultate=c(rezultate,"Volum MC 10000=");
+  rezultate=c(rezultate,puncte);
+  rezultate=c(rezultate,"Erroare relativa1=");
+  rezultate=c(rezultate,rerra);
+  
+  puncte=0;
+  for(i in 1:20000){
+    x=runif(1,-2,2);
+    y=runif(1,-2,2);
+    z=runif(1,0,3);
+    if(z<=3){
+      z=z*z;
+      if(x*x+y*y<=suprh*z)
+        puncte=puncte+1;
+    }
+  }
+
+  puncte=(48*puncte)/20000;
+  rerrb=abs(puncte-vol)/vol;
+  rezultate=c(rezultate,"Volum MC 20000=");
+  rezultate=c(rezultate,puncte);
+  rezultate=c(rezultate,"Erroare relativa2=");
+  rezultate=c(rezultate,rerrb);
+  
+  puncte=0;
+  for(i in 1:50000){
+    x=runif(1,-2,2);
+    y=runif(1,-2,2);
+    z=runif(1,0,3);
+    if(z<=3){
+      z=z*z;
+      if(x*x+y*y<=suprh*z)
+        puncte=puncte+1;
+    }
+  }
+  
+  puncte=(48*puncte)/50000;
+  rerrc=abs(puncte-vol)/vol;
+  rezultate=c(rezultate,"Volum MC 50000=");
+  rezultate=c(rezultate,puncte);
+  rezultate=c(rezultate,"Erroare relativa3=");
+  rezultate=c(rezultate,rerrc);
+  return(rezultate);
+}
+
+B2=function(){
+  # 2y<=x /+y => 3y<=x+y<=3 => 3y<=3 => y<=1 && y>=0 => y apartine [0,1] => [c,d]=[0,1]
+  # x>=2y => x apartine [2y,k], k numar real, k>=2y; din graficul celor 3 inegalitati, reiese [a,b]=[0,3]
+  puncte=0;
+  for(i in 1:15000)
+  {
+    x=runif(1,0,3);
+    y=runif(1,0,1);
+    if(x>=2*y)
+      if(x+y<=3)
+        puncte=puncte+1;
+  }
+  puncte=(3*puncte)/15000;
+  return(puncte);
+}
+
+B3=function(){
+  reza=0.85840734641 #4-pi
+  fa=(function(x) ((2*sqrt(x))/(x+1)) );
+  inta=0;
+  for(i in 1:50000){
+    x=runif(1,0,1);
+    inta=inta+fa(x);
+  }
+  inta=inta/50000;
+  modul=abs(inta-reza)/reza;
+  rezultat=c("Rezultat real(a)=",reza,"MC=",inta,"EroareRelaiva=",modul);
+  
+  rezb=3;
+  fb=(function(x) ((1+2*x)*exp(-x)));
+  intb=0;
+  #alegem un a marisor; a=1000;
+  for(i in 0:50000){
+    x=runif(1,0,1000);
+    intb=intb+fb(x);
+  }
+  intb=1000*intb/50000;
+  modul=abs(intb-rezb)/rezb;
+  rezultat=c(rezultat,"Rezultat real(b)=",rezb,"MC=",intb,"EroareRelativa=",modul);
+  return(rezultat);
+}
+
+
+##B5
+Nodays=function() {
+  days=1;
+  infected=4;
+  raise=0;
+  #pcs=rep(1,25);
+  pcs=c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+  pcs[1:4]=2;
+  # 1->curat ; 2->infectat
+  while(infected>0){
+    days=days+1;
+    raise=0;
+    #din teste, reiese ca rata de infectie este cu mult mai mare decat cea de curatare, sansa de 15% de infectie fiind imposibila pentru 
+    #o curatare a retelei
+    #odata ce reteaua a fost infectata complet, sansele de a fi reinfectata complet sunt foarte mari
+    #din acest motiv, pentur problema, vom utiliza o probabilitate de infectie mai mica decat cea de 15%
+    #din teste, o sansa de 5% de infectie produce si curatari si infectari complete, astfel media curatarii, fiind influentata de valorile de 0
+    
+    #pentru fiecare calculator infectat, trecem prin cele curate pentru a verifica daca au fost infectate
+    #pentru a nu modifica capatul superior al buclei for, vom folosi o variabila raise pentru a masura cresterea in calculatoare infectate
+    for(i in 1:infected){
+      j=1;
+      len=length(pcs);
+      while(j<=len){
+        if(pcs[j]==1){
+          x=sample(1:100,1);
+          if(x[1]<=5){
+            pcs[j]=2;
+            raise=raise+1;
+          }
+        }
+        j=j+1;
+      }
+    }
+    infected=infected+raise;
+    
+    #conditie de iesire pentru reteaua complet infectata
+    if(infected>=25){
+      return(0);
+    }
+    #mini=min(c(3,infected));
+    
+    #administratorul alege 3 calculatoare infectate. daca sunt mai putine calculatoare infectate, doar ele vor fi curatate
+    mini=3;
+    if(mini>infected){
+      mini=infected;
+    }
+    
+    for(i in 1:mini){
+      j=1;
+      len=length(pcs);
+      while(j<=len){
+        if(pcs[j]==2){
+          x=sample(1:100,1);
+          if(x[1]<=65){
+            pcs[j]=1;
+            infected=infected-1;
+            j=len+1;
+          }
+        }
+        j=j+1;
+      }
+    }
+    if(infected==0){
+      return(days);
+    }
+  }
+}
+
+B5=function() {
+  medie=0;
+  for(i in 1:1000){
+    medie=medie+Nodays();
+  }
+  medie=medie/1000;
+  return(medie);
+}
+
+
+B6subA=function(){
+  hours=0;
+  #deoarece in R linia si coloana 0 sunt rezervate de catre limbaj, translam matricea cu o pozitie si o coloana mai jos (0,0)=>(1,1)
+  # oricare (x,y) din plan => (x,y) devine (x+1,y+1);
+  stx=51;
+  sty=101;
+  x=rep(0,197*99);
+  mat=matrix(x,nrow=99,ncol=197);
+  
+  #directie trigonometrica incepand cu nord
+  # dx=c(-1,-1,0,1,1,1,0,-1);
+  # dy=c(0,-1,-1,-1,0,1,1,1);
+  
+  # vector de directii pentru directiile absolute(nord,est,sud,vest);
+   dx=c(-2,-1,0,1,2,1,0,-1);
+   dy=c(0,-1,-2,-1,0,1,2,1);
+  
+  #prob=c(30,40,50,70,50,40,30,0);
+   prob=c(50,70,50,40,30,0,30,40);
+  
+  #in matrice, mat[i,j] = { 
+  # 0, daca nu este copac
+  # 1, daca este copac
+  # 2, daca este copac in flacari
+  #}
+  for(i in 1:nrow(mat)){
+    j=i;
+    ok=1;
+    capat=197-i;
+    while(j<=capat){
+      mat[i,j]=1;
+      j=j+2;
+    }
+  }
+
+  mat[stx,sty]=2;
+  mat[99,99]=1;
+  while(mat[99,99]!=2){
+    hours=hours+1;
+    for(i in 1:nrow(mat)){
+      for(j in 1:ncol(mat)){
+        if(mat[i,j]==1){
+          for(k in 1:8){
+            px=i+dx[k];
+            py=j+dy[k];
+            if(px<=0 || py<=0){
+              next;
+            }
+            if(px>=100 || py>197){
+              next;
+            }
+            if(mat[px,py]==2){
+              chance=sample(1:100,1);
+              if(chance<=prob[k]){
+                mat[i,j]=3;
+                break;
+              }
+            }
+          }
+          
+          #verific conditia de ardere cu toti vecinii in flacari
+          Ok=1;
+          for(k in 1:8){
+            px=i+dx[k];
+            py=j+dy[k];
+            if(px<=0 || py<=0){
+              next;
+            }
+            if(px>=100 || py>197){
+              next;
+            }
+            
+            if(mat[px,py]==1 || mat[px,py]==3){
+              Ok=0;
+              break;
+            }
+          }
+          if(Ok==1){
+            mat[i,j]=3;
+          }
+        }
+      }
+    }
+    for(irow in 1:nrow(mat)){
+      for(jcol in 1:ncol(mat)){
+        if(mat[irow,jcol]==3){
+          mat[irow,jcol]=2;
+        }
+      }
+    }
+  }
+  return(hours);
+}
+
+B6a=function(){
+  medie=0;
+  #din cauza iterarii unei matrici foarte mari, N-ul din aproximarea MonteCarlo il am pic pentru un timp de asteptare acceptabil
+  
+  for(i in 1:30){
+    medie=medie+B6subA();
+  }
+  medie=medie/30;
+  return(medie);
+}
+
+B6subB=function(hrs){
+  hours=0;
+  #deoarece in R linia si coloana 0 sunt rezervate de catre limbaj, translam matricea cu o pozitie si o coloana mai jos (0,0)=>(1,1)
+  # oricare (x,y) din plan => (x,y) devine (x+1,y+1);
+  stx=99;
+  sty=99;
+  x=rep(0,197*99);
+  mat=matrix(x,nrow=99,ncol=197);
+  
+  #directie trigonometrica incepand cu nord
+  # dx=c(-1,-1,0,1,1,1,0,-1);
+  # dy=c(0,-1,-1,-1,0,1,1,1);
+  
+  # vector de directii pentru directiile absolute(nord,est,sud,vest);
+  dx=c(-2,-1,0,1,2,1,0,-1);
+  dy=c(0,-1,-2,-1,0,1,2,1);
+  
+  #prob=c(30,40,50,70,50,40,30,0);
+  prob=c(50,70,50,40,30,0,30,40);
+  trees=0;
+  
+  
+  #in matrice, mat[i,j] = { 
+  # 0, daca nu este copac
+  # 1, daca este copac
+  # 2, daca este copac in flacari
+  #}
+  for(i in 1:nrow(mat)){
+    j=i;
+    capat=197-i;
+    while(j<=capat){
+        mat[i,j]=1;
+        trees=trees+1;
+      j=j+2;
+    }
+  }
+  mat[99,99]=1;
+  
+  mat[stx,sty]=2;
+  burned=1;
+  while(TRUE){
+    hours=hours+1;
+    for(i in 1:nrow(mat)){
+      for(j in 1:ncol(mat)){
+        if(mat[i,j]==1){
+          for(k in 1:8){
+            px=i+dx[k];
+            py=j+dy[k];
+            if(px<=0 | py<=0){
+              next;
+            }
+            if(px>=100 | py>197){
+              next;
+            }
+            if(mat[px,py]==2){
+              chance=sample(1:100,1);
+              if(chance<=prob[k]){
+                mat[i,j]=3;
+                burned=burned+1;
+                break;
+              }
+            }
+          }
+          
+          #verific conditia de ardere cu toti vecinii in flacari
+          for(k in 1:8){
+            px=i+dx[k];
+            py=j+dy[k];
+            if(px<=0 || py<=0){
+              next;
+            }
+            if(px>=100 || py>197){
+              next;
+            }
+            
+            if(mat[px,py]==1 || mat[px,py]==3){
+              Ok=0;
+              break;
+            }
+          }
+          if(Ok==1){
+            mat[i,j]=3;
+          }
+        }
+      }
+    }
+    
+    if(hours>hrs){
+      break;
+    }
+    
+    for(irow in 1:nrow(mat)){
+      for(jcol in 1:ncol(mat)){
+        if(mat[irow,jcol]==3){
+          mat[irow,jcol]=2;
+        }
+      }
+    }
+  }
+  trees=(1/4)*trees;
+  if(burned>=trees){
+    return(1);
+  }else{
+    return(0);
+  }
+}
+
+B6b=function(){
+  h=c(20,30,40,50,60,70);
+  medie=0;
+  for(i in 1:length(h)){
+    for(j in 1:3){
+      medie=medie+B6subB(h[i]);
+    }
+  }
+  imp=3*6;
+  medie=medie/imp;
+  return(medie);
+}
+
+  print("Unele apeluri de functie dureaza ~1 pentru rulare");
+  #print(c("B1",B1()));
+  print("B1");
+  print(B1());
+  
+  print(c("B2",B2()));
+
+  print(c("B3",B3()));
+
+  print(c("B5",B5()));
+
+  print(c("B6a",B6a()));
+
+  print(c("B6b",B6b()));
+  # print("B2");
+  # print(B2());
+  # print("B3");
+  # print(B3());
+  # print("B5");
+  # print(B5());
+  # print("B6a");
+  # print(B6a());
+  # print("B6b");
+  # print(B6b());
+  
+
+
+C1a=function(x,a){
+  found=F;
+  while(!found){
+    index=sample(1:length(x),1);
+    if(x[index]==a){
+      return(index);
+    }
+  }
+}
+
+C1b=function(){
+  x=sample(1:50,200,replace=T);
+  k=0;
+  #alegem a=51;
+  a=51;
+  while(k<10){
+    index=sample(1:200,1);
+    if(x[index]!=a){
+      x[index]=a;
+      k=k+1;
+    }
+  }
+  
+  subB=(function(x,a) {
+    found=F;
+    count=0;
+    while(!found){
+      index=sample(1:length(x),1);
+      if(x[index]==a){
+        return(count);
+      }
+      count=count+1;
+    }
+  })
+  
+  medie=0;
+  for(i in 1:100){
+    medie=medie+subB(x,a);
+  }
+  medie=medie/100;
+  infav=length(x)/10;
+  #compare=(medie<infav);
+  compare=0;
+  if(medie<infav){
+    compare=1;
+  }
+  result=c("Medie=",medie,"Nefavorabil=",infav,"Comparatie=",compare);
+  return(result);
+}
+
+C2=function(n){
+  S=sample(3*n);
+  slen=((3*n)^(3/4));
+  R=c();
+  for(i in 1:slen){
+    index=sample(1:length(S),1);
+    R=c(R,S[index]);
+  }
+  sort(R,method="quick"); #specificam algoritmul de sortare pentru a obtine complexitatea O(nlogn)
+  
+  id=floor(slen/2-sqrt(n));
+  d=R[id];
+  iu=ceiling(slen/2+sqrt(n));
+  u=R[iu];
+  C=c();
+  for(i in S){
+    if(i>=d && i<=u){
+      C=c(C,i);
+    }
+  }
+  
+  ld=0;
+  lu=0;
+  for(i in S){
+    if(i<d){
+      ld=ld+1;
+    }
+    if(i>u){
+      lu=lu+1;
+    }
+  }
+  m=c("No median found");
+  if(ld>(n/2)){
+    return(m);
+  }
+  if(lu>(n/2)){
+    return(m);
+  }
+  slen=ceiling(slen);
+  if(length(C)>(4*slen)){
+    return(m);
+  }
+  sort(C);
+  index=floor(3*n/2)-ld+1;
+  return(C[index]);
+}
+
+C3a=function(n){
+  fcoef=sample(-100:100,n,replace=T); #generam coeficientii polinomului f in ordinea (a0,a1,a2,...,an-1); an il vom alege separat, deorece trebuie sa fie nenul 
+  gcoef=sample(-100:100,n,replace=T);
+  hcoef=sample(-100:100,2*n,replace=T);
+  for(i in 1:3){
+    coef=sample(-100:100,1);
+    while(coef==0){
+      coef=sample(-100:100,1);
+    }
+    if(i==1){
+      fcoef=c(fcoef,coef);
+    }else if(i==2){
+      gcoef=c(gcoef,coef);
+    }else{
+      hcoef=c(hcoef,coef);
+    }
+  }
+  
+  p=sample(1:(3*n),1);
+  
+  polyval=(function(f,p){
+    val=0;
+    pow=1;
+    for(i in f){
+      val=val+i*pow;
+      pow=pow*p;
+    }
+    return(val);
+  })
+  
+  fp=polyval(fcoef,p);
+  gp=polyval(gcoef,p);
+  hp=polyval(hcoef,p);
+  fp=fp*gp;
+  if(fp==hp){
+    return(TRUE);
+  }else{
+    return(FALSE);
+  }
+}
+
+C3subB=function(){
+  # deoarece probabilitatea este o valoare subunitara, executarea algoritmului de foarte multe ori
+  # va duce ca marginea de eroare sa scada si ea ( stim ca daca 0<a<1; lim(a^n) = 0, cand n tinde la infinit)
+  # deci, pentru a reduce marginea de eroare sub valoarea dorita(0.00001), vom simula o rulare a algoritmului de un numar foarte mare de ori
+  
+  error=runif(1,0,2/3);
+  count=0;
+  while(error>0.00001){
+    mul=runif(1,0,2/3);
+    error=error*mul;
+    count=count+1;
+  }
+  return(count);
+}
+
+C3b=function(){
+  # vom calcula o medie pentru numarul necesar de repetari ale algoritmului pentru a atinge precizia dorita
+  medie=0;
+  for(i in 1:10000){
+    medie=medie+C3subB();
+  }
+  medie=medie/10000;
+  return(medie);
+}
+
+C4=function(n){
+  if(n%%2==0){
+    if(n!=2){
+      return(FALSE);
+    }else{
+      return(TRUE);
+    }
+  }
+  a=sample(2:(n-2),1);
+  
+  pow=(function(a,m,n){
+    if(m==0){
+      return(1);
+    }
+    y=1;
+    while(m>1){
+      if(m%%2 == 0){
+        a=a*a;
+        m=floor(m/2);
+        a=a%%n;
+      }else{
+        y=a*y;
+        a=a*a;
+        m=floor((m-1)/2);
+        a=a%%n;
+        y=y%%n; 
+      }
+    }
+    a=a*y;
+    a=a%%n;
+    return(a);
+  })
+  
+  n2=n-1;
+  k=0;
+  k2=1;
+  ok=0;
+  m=1;
+  while(ok==0){
+    k=k+1;
+    k2=k2*2;
+    m=1;
+    sum=k2*m;
+    while(sum<n2){
+      m=m+2;
+      sum=k2*m;
+    }
+    if(sum==n2){
+      ok=1;
+    }
+  }
+  #din cauza modului de determinare ale numerelor k si m, daca n este un numar de forma (2^l)+1, l numar natural,
+  #n-1 va fi de forma 2^l => (2^k)*m=2^l => {k=l ; m=1;}
+  #m=1 => (a^m)%%n = a%%n; a apartine(2,n-2) => a%%n=a => b=(a^m)%%n <=> b=a;
+  #b=a si a>1 si a<(n-1) => pentru n=(2^l)+1, algoritmul returneaza FALSE mereu;
+  b=pow(a,m,n);
+  for(i in 1:k){
+    if(b!=1 && (b!=n2)){
+      return(FALSE);
+    }else
+      if(b==n2){
+        return(TRUE);
+      }
+    b=pow(b,2,n);
+  }
+  if(b!=1){
+    return(FALSE);
+  }else{
+    return(TRUE);
+  }
+}
+
+  x=sample(1:50,200,replace=TRUE);
+  k=0;
+  a=51;
+  while(k<10){
+    index=sample(1:200,1);
+    if(x[index]!=a){
+      x[index]=a;
+      k=k+1;
+    }
+  }
+  # res=C1a(x,a);
+  # print(c("C1a",res));
+  # 
+  # res=C1b();
+  # print(c("C1b",res));
+  # 
+  # res=C2(50);
+  # print(c("C2",res));
+  # 
+  # res=C3a(50);
+  # print(c("C3a",res));
+  # 
+  # res=C3b();
+  # print(c("C3b",res));
+  # 
+  # print(c("C4(15)",C4(15),"C4(23)",C4(23)));
+  
+  res=C1a(x,a);
+  cat("Am generat un vector random cu elemente in [1,50] si am inserat de 10 ori 51 iar rezultatul la C1a este: ",res,"\n");
+  
+  res=C1b();
+  cat("\nApelul lui C1b: ",res,"\n");
+  
+  res=C2(50);
+  cat("\nAm ales n=50 pentru C2: ",res,"\n");
+  
+  res=C3a(50);
+  cat("\nAm ales n=50 pentru C3a: ",res,"\n");
+  
+  res=C3b();
+  cat("\nRezultatul apelului C3b: ",res,"\n");
+  
+  cat("\nVerificam daca 15 e prim: ",C4(15),"\nVerificam daca 23 e prim: ",C4(23));
+  
+  
+  
+
+
+
+
+
+
+D1=function(){
+  sigma=0.0025;
+  sample_miu=4.5;
+  times=8;
+  alfa=1-0.99;
+  critz=qnorm(1-alfa/2,0,1);
+  a=sample_miu - critz * sigma/sqrt(times);
+  b=sample_miu + critz * sigma/sqrt(times);
+  cat("\nUn interval [a,b] de incredere 99% este: [",a,",",b,"]\n");
+}
+
+D2=function(){
+  #sigma=10;
+  spatrat=10;
+  s=sqrt(10);
+  alfa=1-0.95
+  sample_miu=40;
+  times=225;
+  critt=qt(1-alfa/2,times-1);
+  se=s/sqrt(times);
+  a=sample_miu - critt * se;
+  b=sample_miu + critt * se;
+  cat("\nUn interval [a,b] de incredere 95% este: [",a,",",b,"]\n");
+}
+
+D3=function(){
+  #ipoteza nula H0
+  p0=17.1/100;
+  #ipoteza alternativa Ha
+  alfa1=1/100;
+  alfa5=5/100;
+  successes=24;
+  pprim=successes/125;
+  zscore=(pprim-p0)/sqrt(p0*(1-p0)/125);
+  #vom face 4 teste, 2 cu asimetrie, pentru alfa diferit, si 2 cu simetrie, pentru alfa diferit;
+  #pprim=p
+  cat("\n");
+  if(pprim<p0){
+    critz1=qnorm(alfa1,0,1);
+    critz5=qnorm(alfa5,0,1);
+    
+    if(zscore<critz1){
+      cat("\nAsimetrie la stanga : nivel de seminificatie 1% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz1,"\n");
+    }else{
+      cat("Asimetrie la stanga : nivel de seminificatie 1% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz1,"\n");
+    }
+    if(zscore<critz5){
+      cat("\nAsimetrie la stanga : nivel de seminificatie 5% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz5,"\n");
+    }else{
+      cat("Asimetrie la stanga : nivel de seminificatie 5% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz5,"\n");
+    }
+  }else
+    if(pprim>p0){
+      critz1=qnorm(1-alfa1,0,1);
+      critz5=qnorm(1-alfa5,0,1);
+      
+      if(zscore>critz1){
+        cat("\nAsimetrie la dreapta : nivel de seminificatie 1% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz1,"\n");
+      }else{
+        cat("Asimetrie la dreapta : nivel de seminificatie 1% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz1,"\n");
+      }
+      if(zscore>critz5){
+        cat("Asimetrie la dreapta : nivel de seminificatie 5% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz5,"\n");
+      }else{
+        cat("Asimetrie la dreapta : nivel de seminificatie 5% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz5,"\n");
+      }
+    }
+  if(pprim!=p0){
+    critzSim1=qnorm(1-alfa1/2,0,1);
+    critzSim5=qnorm(1-alfa5/2,0,1);
+    modul1=abs(critzSim1);
+    modul5=abs(critzSim5);
+    modulz=abs(zscore);
+    if(modulz>modul1){
+      cat("\nSimetrie : nivel de semnificatie 1% : Ipoteza nula a fost respinsa : |z|=",modulz," |z*|=",modul1,"\n");
+    }else{
+      cat("\nSimetrie : nivel de semnificatie 1% : Ipoteza nula nu a putut fi respinsa : |z|=",modulz," |z*|=",modul1,"\n");
+    }
+    if(modulz>modul5){
+      cat("\nSimetrie : nivel de semnificatie 5% : Ipoteza nula a fost respinsa : |z|=",modulz," |z*|=",modul5,"\n");
+    }else{
+      cat("Simetrie : nivel de semnificatie 5% : Ipoteza nula nu a putut fi respinsa : |z|=",modulz," |z*|=",modul5,"\n");
+    }
+  }
+}
+
+D4=function(){
+  #ipoteza nula H0;
+  p0=58/100;
+  alfa1=1/100;
+  alfa5=5/100;
+  successes=50;
+  pprim=successes/90;
+  zscore=(pprim-p0)/sqrt(p0*(1-p0)/90);
+  cat("\n");
+  if(pprim<p0){
+    critz1=qnorm(alfa1,0,1);
+    critz5=qnorm(alfa5,0,1);
+    
+    if(zscore<critz1){
+      cat("\nAsimetrie la stanga : nivel de seminificatie 1% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz1,"\n");
+    }else{
+      cat("Asimetrie la stanga : nivel de seminificatie 1% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz1,"\n");
+    }
+    if(zscore<critz5){
+      cat("\nAsimetrie la stanga : nivel de seminificatie 5% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz5,"\n");
+    }else{
+      cat("Asimetrie la stanga : nivel de seminificatie 5% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz5,"\n");
+    }
+  }else
+    if(pprim>p0){
+      critz1=qnorm(1-alfa1,0,1);
+      critz5=qnorm(1-alfa5,0,1);
+      
+      if(zscore<critz1){
+        cat("\nAsimetrie la dreapta : nivel de seminificatie 1% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz1,"\n");
+      }else{
+        cat("Asimetrie la dreapta : nivel de seminificatie 1% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz1,"\n");
+      }
+      if(zscore>critz5){
+        cat("Asimetrie la dreapta : nivel de seminificatie 5% : Ipoteza nula a fost respinsa : z=",zscore," z*=",critz5,"\n");
+      }else{
+        cat("Asimetrie la dreapta : nivel de seminificatie 5% : Ipoteza nula nu a putut fi respinsa : z=",zscore," z*=",critz5,"\n");
+      }
+    }
+  if(pprim!=p0){
+    critzSim1=qnorm(1-alfa1/2,0,1);
+    critzSim5=qnorm(1-alfa5/2,0,1);
+    modul1=abs(critzSim1);
+    modul5=abs(critzSim5);
+    modulz=abs(zscore);
+    if(modulz>modul1){
+      cat("\nSimetrie : nivel de semnificatie 1% : Ipoteza nula a fost respinsa : |z|=",modulz," |z*|=",modul1,"\n");
+    }else{
+      cat("\nSimetrie : nivel de semnificatie 1% : Ipoteza nula nu a putut fi respinsa : |z|=",modulz," |z*|=",modul1,"\n");
+    }
+    if(modulz>modul5){
+      cat("\nSimetrie : nivel de semnificatie 5% : Ipoteza nula a fost respinsa : |z|=",modulz," |z*|=",modul5,"\n");
+    }else{
+      cat("Simetrie : nivel de semnificatie 5% : Ipoteza nula nu a putut fi respinsa : |z|=",modulz," |z*|=",modul5,"\n");
+    }
+  }
+}
+
+cat("Problema D1: \n");
+D1();
+cat("\n\nProblema D2: \n");
+D2();
+cat("\n\nProblema D3: ");
+D3();
+cat("\n\nProblema D4: \n");
+D4();
+
+
+
+
+
+
+
+E1=function(){
+   x=c(10.51,10.22,9.87,9.93,10.34,10.48,10.17);
+   miu0=10.3;
+   alfa=1/100;
+   stdDev=sd(x);
+   xmean=mean(x);
+   tscore=(xmean-miu0)/(stdDev/sqrt(length(x)));
+   cat("\n");
+   if(xmean<miu0){
+     #asimetrie la stanga;
+     critt=qt(alfa,length(x)-1);
+     if(tscore<critt){
+       cat("\nAsimetrie la stanga : nivel de semnificatie 1% : Ipoteza nula a fost respinsa : t=",tscore," t*=",critt,"\n");
+     }else{
+       cat("\nAsimetrie la stanga : nivel de semnificatie 1% : Ipoteza nula nu a putut fi respinsa : t=",tscore," t*=",critt,"\n");
+     }
+   }else
+     if(xmean>miu0){
+       #asimetrie la dreapta
+       critt=qt(1-alfa,length(x)-1);
+       if(tscore<critt){
+         cat("\nAsimetrie la dreapta : nivel de semnificatie 1% : Ipoteza nula a fost respinsa : t=",tscore," t*=",critt,"\n");
+       }else{
+         cat("\nAsimetrie la dreapta : nivel de semnificatie 1% : Ipoteza nula nu a putut fi respinsa : t=",tscore," t*=",critt,"\n");
+      }
+     }
+   if(xmean!=miu0){
+     #simetrie
+     critt=qt(1-alfa/2,length(x)-1);
+     modult=abs(tscore);
+     modulcritt=abs(critt);
+     if(modult>modulcritt){
+       cat("\n\nSimetrie : nivel de semnificatie 1% : Ipoteza nula a fost respinsa : |t|=",modult," |t*|=",modulcritt,"\n");
+     }else{
+       cat("\n\nSimetrie : nivel de semnificatie 1% : Ipoteza nula nu a putut fi respinsa : |t|=",modult," |t*|=",modulcritt,"\n");
+     }
+   }
+}
+
+E2=function(){
+  # stim din Ha ca miu>miu0 => asimetrie la dreapta;
+  z=1.85;
+  alfa1=1/100;
+  alfa5=5/100;
+  critz1=qnorm(1-alfa1,0,1);
+  critz5=qnorm(1-alfa5,0,1);
+  if(z>critz1){
+    cat("\nAcest scor statistic este semnificativ pentru nivelul de semnificatie de 1%\n");
+  }else{
+    cat("\nAcest scor statistic nu este semnificativ pentru nivelul de semnificatie de 1%\n");
+  }
+  if(z>critz5){
+    cat("\nAcest scor statistic este semnificativ pentru nivelul de semnificatie de 5%\n");
+  }else{
+    cat("\nAcest scor statistic nu este semnificativ pentru nivelul de semnificatie de 5%\n");
+  }
+}
+
+E3=function(){
+  # se formeaza ipoteza nula
+  m0=0;
+  alfa1=1/100;
+  alfa5=5/100;
+  x1mean=76.56;
+  x2mean=72.33;
+  n1=21;
+  n2=22;
+  sigma1=2.95;
+  sigma2=3.12;
+  csigma=sqrt(sigma1^2/n1 + sigma2^2/n2);
+  #nu cunoastem relatia intre miu-uri => vom testa simetrie
+  critz1=qnorm(1-alfa1/2,0,1);
+  critz5=qnorm(1-alfa5/2,0,1);
+  zscore=x1mean-x2mean-m0;
+  zscore=zscore/csigma;
+  modulz=abs(zscore);
+  modulcritz1=abs(critz1);
+  modulcritz5=abs(critz5);
+  if(modulz>modulcritz1){
+    cat("\nSimetrie : nivel de semnificatie 1% : |z|=",modulz," |z*|=",modulcritz1," Ipoteza nula a fost respinsa\n");
+  }else{
+    cat("\nSimetrie : nivel de semnificatie 1% : |z|=",modulz," |z*|=",modulcritz1," Ipoteza nula nu a putut fi respinsa\n");
+  }
+  if(modulz>modulcritz5){
+    cat("\nSimetrie : nivel de semnificatie 5% : |z|=",modulz," |z*|=",modulcritz5," Ipoteza nula a fost respinsa\n");
+  }else{
+    cat("\nSimetrie : nivel de semnificatie 5% : |z|=",modulz," |z*|=",modulcritz5," Ipoteza nula nu a putut fi respinsa\n");
+  }
+}
+
+E4=function(){
+  m0=0;
+  alfa1=1/100;
+  alfa5=5/100;
+  x1mean=20.5;
+  x2mean=21.6;
+  n1=87;
+  n2=91;
+  sigma1=1.15;
+  sigma2=0.92;
+  #simetrie
+  csigma=sqrt(sigma1^2/n1 + sigma2^2/n2);
+  zscore=x1mean-x2mean;
+  zscore=zscore/csigma;
+  critz1=qnorm(1-alfa1/2,0,1);
+  critz5=qnorm(1-alfa5/2,0,1);
+  modulz=abs(zscore);
+  modulcrt1=abs(critz1);
+  modulcrt5=abs(critz5);
+  
+  if(modulz>modulcrt1){
+    cat("\nSimetrie : nivel de semnificatie 1% : |z|=",modulz," |z*|=",modulcrt1," Ipoteza nula a fost respinsa\n");
+  }else{
+    cat("\nSimetrie : nivel de semnificatie 1% : |z|=",modulz," |z*|=",modulcrt1," Ipoteza nula a putut fi respinsa\n");
+  }
+  if(modulz>modulcrt5){
+    cat("\nSimetrie : nivel de semnificatie 5% : |z|=",modulz," |z*|=",modulcrt5," Ipoteza nula a fost respinsa\n");
+  }else{
+    cat("\nSimetrie : nivel de semnificatie 5% : |z|=",modulz," |z*|=",modulcrt5," Ipoteza nula a putut fi respinsa\n");
+  }
+}
+
+E5=function(){
+  alfa=1/100;
+  n1=235;
+  n2=197;
+  s1=1.83;
+  s2=2.11;
+  f=s2/s1;
+  critf=qf(1-alfa,n2-1,n1-1);
+  if(f>critf){
+    cat("\nAsimetrie la dreapta : nivel de semnificatie 1% : f=",f," Ipoteza nula a fost respinsa\n");
+  }else{
+    cat("\nAsimetrie la dreapta : nivel de semnificatie 1% : f=",f," Ipoteza nula nu a putut fi respinsa\n");
+  }
+}
+
+cat("E1:\n");
+E1();
+cat("\n\nE2:\n");
+E2();
+cat("\n\nE3:\n");
+E3();
+cat("\n\nE4:\n");
+E4();
+cat("\n\nE5:\n");
+E5();
+

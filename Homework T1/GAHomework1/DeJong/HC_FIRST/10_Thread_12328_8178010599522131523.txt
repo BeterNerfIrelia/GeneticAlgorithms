@@ -1,0 +1,7 @@
+Thread id: 12328
+ Dimensions: 10
+
+
+Global minimum: 2.38419e-10
+Found at iteration: 0
+Point: (4.88282e-06, 4.88282e-06, 4.88282e-06, 4.88282e-06, 4.88282e-06, -4.88282e-06, -4.88282e-06, -4.88282e-06, 4.88282e-06, -4.88282e-06)Time elapsed: 79.813 seconds.

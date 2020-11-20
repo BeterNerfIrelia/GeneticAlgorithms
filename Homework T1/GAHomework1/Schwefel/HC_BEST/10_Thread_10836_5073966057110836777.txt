@@ -1,0 +1,7 @@
+Thread id: 10836
+ Dimensions: 10
+
+
+Global minimum: -4121.35
+Found at iteration: 8957
+Point: (437.5, 420.969, 420.969, 420.898, 420.898, 420.898, 420.898, 437.5, 420.898, 420.969)Time elapsed: 280.795 seconds.

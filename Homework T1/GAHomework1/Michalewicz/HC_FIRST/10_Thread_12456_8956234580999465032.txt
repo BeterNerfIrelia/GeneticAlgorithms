@@ -1,0 +1,7 @@
+Thread id: 12456
+ Dimensions: 10
+
+
+Global minimum: -9.47593
+Found at iteration: 9625
+Point: (2.20291, 1.57079, 1.285, 1.91441, 1.71806, 2.02793, 1.45421, 1.75487, 1.65572, 1.21704)Time elapsed: 103.958 seconds.

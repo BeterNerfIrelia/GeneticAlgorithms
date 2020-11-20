@@ -1,0 +1,13 @@
+﻿  GAHomework1.cpp
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(84,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(96,13): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(117,20): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(220,25): warning C4244: 'argument': conversion from 'unsigned __int64' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=char
+          ]
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(266,20): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(328,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(387,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  GAHomework1.vcxproj -> D:\WID\Facultate\AG2\GAHomework1\x64\Debug\GAHomework1.exe

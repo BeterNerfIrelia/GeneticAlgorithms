@@ -1,0 +1,7 @@
+Thread id: 1836
+ Dimensions: 10
+
+
+Global minimum: -4121.05
+Found at iteration: 9536
+Point: (437.5, 421.875, 420.898, 437.5, 420.969, 421.875, 420.969, 420.959, 420.969, 421.875)Time elapsed: 288.562 seconds.

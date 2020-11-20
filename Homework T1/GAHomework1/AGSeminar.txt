@@ -1,0 +1,36 @@
+Cautare locala : solutie buna si cautam in jurul ei
+Exploatare: avem solutie buna si exploatam vecinatatea pentru solutie buna
+
+
+
+Cautarea globala: cautare oportunista si speram sa gasim solutii diferite care sa ne conduca la solutii mai bune
+Explorare
+
+
+
+Mutatia -> explorare
+Crossover -> exploatare
+
+
+
+
+Echilibram cele 2 cu functia de selectie
+Presiune de selectie: diferenta intre fitness-uri pt cromozomi. presiune mare => sanse seminficativ mai mari pt cel cu fitness bun
+Traduce diferenta de fitness in probabilitati de selectie.
+
+
+pt presiune de selectie mare: cel mai slab la o zecime de probabilitate de selectie;
+
+
+
+
+hibridizare cu HC.
+
+
+algoritm memetic: inainte de fiecare evaluare sa aplicam gradient ascent pe fiecare candidat si acea valoare sa fie evaluata.
+
+
+meta-algortim genetic.
+
+
+site-uri de preprint. : arxiv.org

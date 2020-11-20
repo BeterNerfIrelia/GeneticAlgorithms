@@ -1,0 +1,10 @@
+Thread id: 12120
+Dimensions: 5
+
+
+Global minimum: -4.48141
+Point:
+(2.20275, 1.57081, 2.21928, 1.11374, 1.71806)
+
+Time elapsed: 38.079 seconds.
+

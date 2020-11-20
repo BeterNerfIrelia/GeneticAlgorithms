@@ -1,0 +1,7 @@
+Thread id: 7660
+ Dimensions: 10
+
+
+Global minimum: -9.46854
+Found at iteration: 2661
+Point: (2.15984, 1.5708, 1.2824, 1.11367, 1.71806, 1.5708, 1.8776, 1.36064, 1.95736, 1.57079)Time elapsed: 99.438 seconds.

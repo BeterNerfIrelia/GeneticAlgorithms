@@ -1,0 +1,10 @@
+Thread id: 9592
+Dimensions: 5
+
+
+Global minimum: 4.62652e-07
+Point:
+(-0.000327149, 0.000239258, 0.000366211, 0.000239258, -0.000327149)
+
+Time elapsed: 25.026 seconds.
+

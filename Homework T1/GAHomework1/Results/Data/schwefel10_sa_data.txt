@@ -1,0 +1,8 @@
+Minimum value = -4189.72
+Maximum value= -4071.18
+Avg Value = -4176.41466666667
+SD value = 26.6773032465005
+Minimum time = 41.594
+Maximum time = 45.468
+AVG time = 43.3711666666667
+SD time = 0.974958888022123

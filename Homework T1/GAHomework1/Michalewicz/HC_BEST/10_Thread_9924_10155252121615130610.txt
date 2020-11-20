@@ -1,0 +1,7 @@
+Thread id: 9924
+ Dimensions: 10
+
+
+Global minimum: -9.55319
+Found at iteration: 3883
+Point: (2.20894, 1.57079, 1.28548, 1.11367, 1.71806, 1.57079, 1.45421, 1.75602, 1.6567, 1.21704)Time elapsed: 186.699 seconds.

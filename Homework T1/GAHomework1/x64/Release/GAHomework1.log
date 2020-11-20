@@ -1,0 +1,13 @@
+﻿  GAHomework1.cpp
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(84,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(96,13): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(117,20): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(266,20): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(328,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AG2\GAHomework1\GAHomework1.cpp(387,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Generating code
+  29 of 435 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    14 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  GAHomework1.vcxproj -> D:\WID\Facultate\AG2\GAHomework1\x64\Release\GAHomework1.exe

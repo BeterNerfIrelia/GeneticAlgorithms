@@ -1,0 +1,7 @@
+Thread id: 4400
+ Dimensions: 10
+
+
+Global minimum: 3.23079
+Found at iteration: 4963
+Point: (4.88282e-06, 0.995006, 4.88282e-06, 4.88282e-06, 4.88282e-06, 4.88282e-06, -4.88282e-06, 0.959996, -1.00001, -4.88282e-06)Time elapsed: 130.466 seconds.

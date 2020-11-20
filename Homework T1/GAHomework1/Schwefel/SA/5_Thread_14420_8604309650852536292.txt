@@ -1,0 +1,10 @@
+Thread id: 14420
+Dimensions: 5
+
+
+Global minimum: -2094.81
+Point:
+(420.898, 420.969, 420.959, 421.875, 420.898)
+
+Time elapsed: 29.423 seconds.
+

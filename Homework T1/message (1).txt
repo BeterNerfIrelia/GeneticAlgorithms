@@ -1,0 +1,631 @@
+#pragma warning(disable: 4996)
+#include "Functions.h"
+#ifndef LIBS
+#define LIBS
+#include <vector>
+#include <iostream>
+#include <thread>
+#include <cmath>
+#include <sstream>
+#include <cstring>
+#include <stdlib.h>
+#include <time.h>
+#include <fstream>
+#include <iomanip>
+#include <conio.h>
+#endif
+
+using namespace std;
+
+double a = -500, b = 500; //capete interval
+int prec = 5; //precizie;
+unsigned int n; // nr de dimensiuni
+int l; //length
+
+int length(double a, double b, int prec)
+{
+	return ceil(log((b - a) * pow(10, prec)) / log(2));
+}
+
+double decodeDimension(vector<char>::iterator itStart, vector<char>::iterator itEnd, int l, double a, double b)
+{
+    unsigned long bi = 0;
+    for (auto i = itStart; i != itEnd; ++i)
+    {
+        bi *= 2;
+        bi += *i;
+    }
+
+    double s = bi / (pow(2, l) - 1);
+    return s * (b - a) + a;
+
+}
+
+vector<double> decode(vector<char>& bits, int l, unsigned int n, double a, double b)
+{
+    vector<double> ret;
+    vector<char>::iterator itStart, itEnd;
+    for (int i = 0; i < n; ++i) {
+        itStart = bits.begin() + i * l;
+        itEnd = itStart + l;
+
+        double x = decodeDimension(itStart, itEnd, l, a, b);
+        ret.push_back(x);
+    }
+    return ret;
+}
+
+double iteratedHillClimbingWithAll(vector<char>& bits, unsigned int n, int l, double a, double b, ofstream& f, int iteration)
+{
+	clock_t start, end;
+	start = clock();
+	auto decoded = decode(bits, l, n, a, b);
+    double min = schwefel(decoded);
+	bool local = false;
+	int k = 0;
+	do {
+		local = false;
+		double initial = min;
+		for (int i = 0; i < bits.size(); ++i)
+		{
+			bits[i] = !bits[i];
+
+			decoded = decode(bits, l, n, a, b);
+			double val = schwefel(decoded);
+			if (val < min)
+			{
+				min = val;
+				k = i;
+			}
+			bits[i] = !bits[i];
+		}
+		if (min == initial) {
+			local = true;
+		}
+		else {
+			bits[k] = !bits[k];
+		}
+	} while (!local);
+	end = clock();
+	double difference = (double)((double)(end - start) / (double)CLOCKS_PER_SEC);
+	f << min << " (";
+	vector<double> answer = decode(bits, l, n, a, b);
+	for (int i = 0; i < answer.size(); ++i) {
+		f << answer[i];
+		if (i < answer.size() - 1) {
+			f << ", ";
+		}
+		else {
+			f << ")";
+		}
+	}
+	f << " " << difference << '\n';
+
+	return min;
+}
+
+double iteratedHillClimbingBest(vector<char>& bits, unsigned int n, int l, double a, double b, double (*func)(vector<double> &))
+{
+	auto decoded = decode(bits, l, n, a, b);
+	double min = func(decoded);
+	bool local = false;
+	int k = 0;
+	do {
+		local = false;
+		double initial = min;
+		for (int i = 0; i < bits.size(); ++i)
+		{
+			bits[i] = !bits[i];
+
+			decoded = decode(bits, l, n, a, b);
+			double val = func(decoded);
+			if (val < min)
+			{
+				min = val;
+				k = i;
+			}
+			bits[i] = !bits[i];
+		}
+		if (min == initial) {
+			local = true;
+		}
+		else {
+			bits[k] = !bits[k];
+		}
+	} while (!local);
+
+	return min;
+}
+
+double iteratedHillClimbingFirst(vector<char>& bits, unsigned int n, int l, double a, double b, double (*func)(vector<double> &))
+{
+	auto decoded = decode(bits, l, n, a, b);
+	double min = func(decoded);
+	bool local = false;
+	do {
+		local = false;
+		double initial = min;
+		for (int i = 0; i < bits.size(); ++i)
+		{
+			bits[i] = !bits[i];
+
+			double val = func(decoded);
+			if (val < min)
+			{
+				min = val;
+				break;
+			}
+			bits[i] = !bits[i];
+		}
+		if (min == initial) {
+			local = true;
+		}
+	} while (!local);
+
+	return min;
+}
+
+int getIntId(thread::id id) {
+	stringstream buffer;
+	buffer << id;
+	return stoull(buffer.str());
+}
+
+void mainFunctionWithAll(int size) {
+	int id = getIntId(this_thread::get_id());
+	srand(id * clock());
+	char* fileName = new char[256];
+	strcpy(fileName, "results/");
+	strcat(fileName, to_string(size).c_str());
+	strcat(fileName, "_Thread_");
+	strcat(fileName, to_string(id).c_str());
+	strcat(fileName, ".txt");
+	ofstream aux(fileName);
+	aux << "This is the thread with id = " << id << ", executing for size = " << size << '\n';
+	aux << "Format: \n";
+	aux << "Local minimal value || (coordinates) || Time elapsed\n";
+    int L = l * size;
+	double min = 1000000;
+	double max = -1000000;
+	int kMax = 0, kMin = 0;
+	vector<char> bits;
+	vector<double> bitsMin, bitsMax;
+	for (int t = 0; t < 10000; ++t) {
+		bits.clear();
+		for (int i = 0; i < L; ++i) {
+			bits.push_back(rand() % 2);
+		}
+		double ax = iteratedHillClimbingWithAll(bits, size, l, a, b, aux, t);
+		if (ax < min) {
+			min = ax;
+			kMin = t;
+			bitsMin = decode(bits, l, n, a, b);
+		}
+		if (ax > max) {
+			max = ax;
+			kMax = t;
+			bitsMax = decode(bits, l, n, a, b);
+		}
+	}
+	aux << "\nGlobal minimum = " << min << " found at " << kMin << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMin.size(); ++i) {
+		aux << bitsMin[i];
+		if (i < bitsMin.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	aux << "\nGlobal maximum = " << max << " found at " << kMax << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMax.size(); ++i) {
+		aux << bitsMax[i];
+		if (i < bitsMax.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	aux.close();
+}
+
+void mainFunctionHillClimbingBest(int size, double (*func)(vector<double> &), clock_t beginning, const char* function) {
+	clock_t start, end;
+	start = clock();
+	int id = getIntId(this_thread::get_id());
+	srand(id * clock());
+	char* fileName = new char[256];
+	strcpy(fileName, function);
+	strcat(fileName, "/hc_best/");
+	strcat(fileName, to_string(size).c_str());
+	strcat(fileName, "_Thread_");
+	strcat(fileName, to_string(id).c_str());
+	strcat(fileName, "_");
+	strcat(fileName, to_string(clock() - beginning).c_str());
+	strcat(fileName, ".txt");
+	ofstream aux(fileName);
+	aux << "This is the thread with id = " << id << ", executing for size = " << size << '\n';
+	int L = l * size;
+	double min = 1000000;
+	double max = -1000000;
+	int kMax = 0, kMin = 0;
+	vector<char> bits;
+	vector<double> bitsMin, bitsMax;
+	for (int t = 0; t < 10000; ++t) {
+		bits.clear();
+		for (int i = 0; i < L; ++i) {
+			bits.push_back(rand() % 2);
+		}
+		double ax = iteratedHillClimbingBest(bits, size, l, a, b, func);
+		if (ax < min) {
+			min = ax;
+			kMin = t;
+			bitsMin = decode(bits, l, size, a, b);
+		}
+		if (ax > max) {
+			max = ax;
+			kMax = t;
+			bitsMax = decode(bits, l, size, a, b);
+		}
+	}
+	aux << "\nGlobal minimum = " << min << " found at " << kMin << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMin.size(); ++i) {
+		aux << bitsMin[i];
+		if (i < bitsMin.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	aux << "\nGlobal maximum = " << max << " found at " << kMax << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMax.size(); ++i) {
+		aux << bitsMax[i];
+		if (i < bitsMax.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	end = clock();
+	aux << "\nThread with id = " << id << " took " << (double)((double)(end - start) / (double)CLOCKS_PER_SEC) << " seconds.\n";
+	aux.close();
+}	
+
+void mainFunctionHillClimbingFirst(int size, double (*func)(vector<double> &), clock_t beginning, const char* function) {
+	clock_t start, end;
+	start = clock();
+	int id = getIntId(this_thread::get_id());
+	srand(id * clock());
+	char* fileName = new char[256];
+	strcpy(fileName, function);
+	strcat(fileName, "/hc_first/");
+	strcat(fileName, to_string(size).c_str());
+	strcat(fileName, "_Thread_");
+	strcat(fileName, to_string(id).c_str());
+	strcat(fileName, "_");
+	strcat(fileName, to_string(clock() - beginning).c_str());
+	strcat(fileName, ".txt");
+	ofstream aux(fileName);
+	aux << "This is the thread with id = " << id << ", executing for size = " << size << '\n';
+	int L = l * size;
+	double min = 1000000;
+	double max = -1000000;
+	int kMax = 0, kMin = 0;
+	vector<char> bits;
+	vector<double> bitsMin, bitsMax;
+	for (int t = 0; t < 10000; ++t) {
+		bits.clear();
+		for (int i = 0; i < L; ++i) {
+			bits.push_back(rand() % 2);
+		}
+		double ax = iteratedHillClimbingFirst(bits, size, l, a, b, func);
+		if (ax < min) {
+			min = ax;
+			kMin = t;
+			bitsMin = decode(bits, l, size, a, b);
+		}
+		if (ax > max) {
+			max = ax;
+			kMax = t;
+			bitsMax = decode(bits, l, size, a, b);
+		}
+	}
+	aux << "\nGlobal minimum = " << min << " found at " << kMin << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMin.size(); ++i) {
+		aux << bitsMin[i];
+		if (i < bitsMin.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	aux << "\nGlobal maximum = " << max << " found at " << kMax << " iteration.\nPoint: (";
+	for (int i = 0; i < bitsMax.size(); ++i) {
+		aux << bitsMax[i];
+		if (i < bitsMax.size() - 1) {
+			aux << ", ";
+		}
+		else {
+			aux << ")";
+		}
+	}
+	end = clock();
+	aux << "\nThread with id = " << id << " took " << (double)((double)(end - start) / (double)CLOCKS_PER_SEC) << " seconds.\n";
+	aux.close();
+}
+
+void solve(int aArg, int bArg, int precisionArg, double (*func)(vector<double> &), const char* function) {
+	a = aArg;
+	b = bArg;
+	prec = precisionArg;
+	l = length(a, b, prec);
+
+	clock_t start, end;
+
+	start = clock();
+	cout << "Starting Hill Climbing Best\n";
+	cout << "Starting threads for size 5\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t2(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t3(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t4(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t5(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t6(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t7(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t8(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t9(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t10(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t11(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t12(mainFunctionHillClimbingBest, 5, func, start, function);
+		/*		   
+		thread t13(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t14(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t15(mainFunctionHillClimbingBest, 5, func, start, function);
+		thread t16(mainFunctionHillClimbingBest, 5, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 5\n";
+	}
+	cout << "Starting threads for size 10\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t2(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t3(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t4(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t5(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t6(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t7(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t8(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t9(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t10(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t11(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t12(mainFunctionHillClimbingBest, 10, func, start, function);
+		/*				  										
+		thread t13(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t14(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t15(mainFunctionHillClimbingBest, 10, func, start, function);
+		thread t16(mainFunctionHillClimbingBest, 10, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 10\n";
+	}
+	cout << "Starting threads for size 30\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t2(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t3(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t4(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t5(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t6(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t7(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t8(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t9(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t10(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t11(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t12(mainFunctionHillClimbingBest, 30, func, start, function);
+		/*				  										
+		thread t13(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t14(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t15(mainFunctionHillClimbingBest, 30, func, start, function);
+		thread t16(mainFunctionHillClimbingBest, 30, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 30\n";
+	}
+	end = clock();
+	cout << "Schwefel with HCB took " << (double)((double)(end - start) / (double)(CLOCKS_PER_SEC)) << " seconds.\n";
+
+	//HERE ENDS BEST
+	//HERE STARTS FIRST
+
+	start = clock();
+	cout << "Starting Hill Climbing First\n";
+	cout << "Starting threads for size 5\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t2(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t3(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t4(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t5(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t6(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t7(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t8(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t9(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t10(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t11(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t12(mainFunctionHillClimbingFirst, 5, func, start, function);
+		/*			  										
+		thread t13(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t14(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t15(mainFunctionHillClimbingFirst, 5, func, start, function);
+		thread t16(mainFunctionHillClimbingFirst, 5, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 5\n";
+	}
+	cout << "Starting threads for size 10\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t2(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t3(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t4(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t5(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t6(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t7(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t8(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t9(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t10(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t11(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t12(mainFunctionHillClimbingFirst, 10, func, start, function);
+		/*			   											 
+		thread t13(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t14(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t15(mainFunctionHillClimbingFirst, 10, func, start, function);
+		thread t16(mainFunctionHillClimbingFirst, 10, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 10\n";
+	}
+	cout << "Starting threads for size 30\n";
+	for (int i = 0; i < 3; ++i) { //running 36 times
+		thread t1(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t2(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t3(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t4(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t5(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t6(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t7(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t8(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t9(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t10(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t11(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t12(mainFunctionHillClimbingFirst, 30, func, start, function);
+		/*			   											 
+		thread t13(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t14(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t15(mainFunctionHillClimbingFirst, 30, func, start, function);
+		thread t16(mainFunctionHillClimbingFirst, 30, func, start, function);
+		*/
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+		t6.join();
+		t7.join();
+		t8.join();
+		t9.join();
+		t10.join();
+		t11.join();
+		t12.join();
+		/*
+		t13.join();
+		t14.join();
+		t15.join();
+		t16.join();
+		*/
+		cout << "Finished iteration " << i << " for size 30\n";
+	}
+	end = clock();
+	cout << "Schwefel with HCF took " << (double)((double)(end - start) / (double)(CLOCKS_PER_SEC)) << " seconds.\n";
+}
+
+int main() {
+	//DEJONG
+	solve(-5.12, 5.12, 5, deJong, "DeJong");
+	//SCHWEFEL
+	solve(-500, 500, 5, schwefel, "Schwefel");
+
+	getch();
+	return 0;
+}

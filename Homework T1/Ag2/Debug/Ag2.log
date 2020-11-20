@@ -1,0 +1,7 @@
+﻿  Ag2.cpp
+D:\WID\Facultate\AG2\Ag2\Ag2.cpp(20,25): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\Ag2\Ag2.cpp(30,16): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+D:\WID\Facultate\AG2\Ag2\Ag2.cpp(51,25): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\Ag2\Ag2.cpp(70,25): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AG2\Ag2\Ag2.cpp(78,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Ag2.vcxproj -> D:\WID\Facultate\AG2\Ag2\Debug\Ag2.exe

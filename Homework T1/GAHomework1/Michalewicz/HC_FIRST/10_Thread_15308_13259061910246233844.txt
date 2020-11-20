@@ -1,0 +1,7 @@
+Thread id: 15308
+ Dimensions: 10
+
+
+Global minimum: -9.36466
+Found at iteration: 2489
+Point: (2.20289, 1.5708, 1.27627, 1.11378, 1.72113, 0.91003, 1.45441, 1.75641, 1.2824, 1.57079)Time elapsed: 102.202 seconds.

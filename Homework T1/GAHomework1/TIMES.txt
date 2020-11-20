@@ -1,0 +1,15 @@
+De Jong BEST 		7978.65 seconds
+De Jong FRIST 		4044.5  seconds
+De Jong SA   		383.158 seconds
+	
+Schwefel BEST		16338.9	seconds
+Schwefel FIRST		9023.74	seconds
+Schwefel SA		472.522	seconds
+
+Rastrigin BEST		7317.49	seconds
+Rastrigin FIRST		4209.13 seconds
+Rastrigin SA		438.588 seconds
+
+Michalewicz BEST	10954.7 seconds
+Michalewicz FIRST	6227.09 seconds
+Michalewicz SA		750.144 seconds

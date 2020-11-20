@@ -1,0 +1,7 @@
+Thread id: 6588
+ Dimensions: 5
+
+
+Global minimum: 2.36502e-08
+Found at iteration: 1668
+Point: (4.88282e-06, -4.88282e-06, 4.88282e-06, -4.88282e-06, 4.88282e-06)Time elapsed: 13.546 seconds.

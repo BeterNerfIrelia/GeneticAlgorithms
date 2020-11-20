@@ -1,0 +1,7 @@
+Thread id: 12020
+ Dimensions: 10
+
+
+Global minimum: -4128.19
+Found at iteration: 2607
+Point: (420.898, 421.875, 437.5, 420.967, 421.875, 421.875, 421.875, 420.898, 421.875, 406.25)Time elapsed: 280.392 seconds.

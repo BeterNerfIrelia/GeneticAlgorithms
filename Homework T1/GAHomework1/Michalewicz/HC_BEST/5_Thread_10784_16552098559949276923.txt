@@ -1,0 +1,7 @@
+Thread id: 10784
+ Dimensions: 5
+
+
+Global minimum: -4.68766
+Found at iteration: 8848
+Point: (2.20291, 1.57079, 1.285, 1.92303, 1.72046)Time elapsed: 30.263 seconds.
