@@ -1,0 +1,137 @@
+	//for (int folder = 0; folder < 6; ++folder)
+	//	for (int popsize = 0; popsize < 2; ++popsize)
+	//		for (int gen = 0; gen < 3; ++gen)
+	//			for(int met=0;met<6;++met)
+	//				for (int dim = 0; dim < 3; ++dim)
+	//				{
+	//					path.clear();
+	//					path = std::string(".\\Output\\");
+	//					path += pairs[folder].first;
+	//					path += std::string("\\");
+	//					path += std::to_string(populationSize[popsize]);
+	//					path += std::string("\\");
+	//					path += std::to_string(generations[gen]);
+	//					path += std::string("\\");
+	//					path += selection[methods[met].first];
+	//					path += std::string("\\");
+	//					switch (methods[met].first)
+	//					{
+	//						case 0:
+	//						{
+	//							//WHEEL
+	//							path += crossName[methods[met].second];
+	//							path += std::string("\\");
+
+	//							switch (folder)
+	//							{
+	//								case 1:
+	//								{
+	//									//atan
+	//									path += std::string("atan\\");
+	//									break;
+	//								}
+	//								case 2:
+	//								{
+	//									//sqrt
+	//									path += std::string("sqrt\\");
+	//									break;
+	//								}
+	//								case 3:
+	//								{
+	//									//exp
+	//									path += std::string("exp\\");
+	//									break;
+	//								}
+	//								default:
+	//									break;
+	//							}
+
+	//							preTheThing(populationSize[popsize], generations[gen], methods[met].first, methods[met].second, 0, pairs[folder].second.first, pairs[folder].second.second, DIMS[dim], interval[folder].first, interval[folder].second, path, 0);
+	//							break;
+	//						}
+	//						case 1:
+	//						{
+	//							//ELITE
+	//							auto pathCopy = path;
+	//							for (int pat = 0; pat < 4; ++pat)
+	//							{
+	//								pathCopy = path;
+	//								pathCopy += std::to_string(percentage[pat]);
+	//								pathCopy += std::string("\\");
+	//								pathCopy += crossName[methods[met].second];
+	//								pathCopy += std::string("\\");
+
+	//								switch (folder)
+	//								{
+	//									case 1:
+	//									{
+	//										//atan
+	//										pathCopy += std::string("atan\\");
+	//										break;
+	//									}
+	//									case 2:
+	//									{
+	//										//sqrt
+	//										pathCopy += std::string("sqrt\\");
+	//										break;
+	//									}
+	//									case 3:
+	//									{
+	//										//exp
+	//										pathCopy += std::string("exp\\");
+	//										break;
+	//									}
+	//									default:
+	//										break;
+	//								}
+
+	//								preTheThing(populationSize[popsize], generations[gen], methods[met].first, methods[met].second, percentage[pat], pairs[folder].second.first, pairs[folder].second.second, DIMS[dim], interval[folder].first, interval[folder].second, path, 0);
+
+	//							}
+
+	//							break;
+	//						}
+	//						case 2:
+	//						{
+	//							//TOURNAMENT
+	//							std::string pathCopy;
+	//							for (int ksize = 0; ksize < 4; ksize++)
+	//							{
+	//								pathCopy = path;
+	//								pathCopy += std::to_string(ktourn[ksize]);
+	//								pathCopy += std::string("\\");
+	//								pathCopy += crossName[methods[met].second];
+	//								pathCopy += std::string("\\");
+
+	//								switch (folder)
+	//								{
+	//								case 1:
+	//								{
+	//									//atan
+	//									pathCopy += std::string("atan\\");
+	//									break;
+	//								}
+	//								case 2:
+	//								{
+	//									//sqrt
+	//									pathCopy += std::string("sqrt\\");
+	//									break;
+	//								}
+	//								case 3:
+	//								{
+	//									//exp
+	//									pathCopy += std::string("exp\\");
+	//									break;
+	//								}
+	//								default:
+	//									break;
+	//								}
+
+	//								preTheThing(populationSize[popsize], generations[gen], methods[met].first, methods[met].second, 0, pairs[folder].second.first, pairs[folder].second.second, DIMS[dim], interval[folder].first, interval[folder].second, path, ktourn[ksize]);
+	//							}
+	//							break;
+	//						}
+	//						default:
+	//							break;
+	//					}
+	//				}

@@ -1,0 +1,256 @@
+/*
+ * If compiled using g++ the option -pthread should be used
+ *
+ * g++ -pthread source.cpp
+ */
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <functional>
+#include <random>
+#include <chrono>
+#include <fstream>
+#include <string>
+#include <thread>
+
+using namespace std;
+
+constexpr double PI = 3.14159265359;
+constexpr double INF = 1e10;
+
+int length(double a, double b, int prec)
+{
+	return ceil(log2((b - a) * pow(10, prec)));
+}
+
+double decode_dimension(vector<char>::iterator start, vector<char>::iterator end, int l, double a, double b)
+{
+	int bin = 0;
+	for (auto i = start; i != end; i++)
+		bin = bin << 1 | *i;
+	double s = bin / (pow(2, l) - 1);
+	return s * (b - a) + a;
+}
+
+vector<double> decode(vector<char>& bits, int n, int l, double a, double b)
+{
+	vector<double> ans;
+	for (int i = 0; i < n; i++)
+	{
+		auto start = bits.begin() + i * l;
+		auto end = start + l;
+		ans.push_back(decode_dimension(start, end, l, a, b));
+	}
+	return ans;
+}
+
+double deJong(vector<double>& v)
+{
+	double ans = 0;
+
+	for (auto i : v)
+		ans += i * i;
+	return ans;
+}
+
+double schwefel(vector<double>& v)
+{
+	double ans = 0;
+
+	for (auto i : v)
+		ans += -i * sin(sqrt(abs(i)));
+	//return ans;
+	return ans + v.size() * 418.9829;
+}
+
+double rastrigin(vector<double>& v)
+{
+	double ans = 10 * v.size();
+
+	for (auto i : v)
+	{
+		ans += i * i - 10 * cos(2 * PI * i);
+	}
+	return ans;
+}
+
+double michalewicz(vector<double>& v)
+{
+	double ans = 0;
+
+	for (int i = 0; i < v.size(); i++)
+		ans += sin(v[i]) * pow(sin((i + 1) * v[i] * v[i] / PI), 20);
+	return -ans;
+}
+
+//aici as putea sa fac fitnessul in functie de vector (gen x, nu f(x)) si taca paca sa il customizez dupa cum imi place
+double fitness_dejong(double x)
+{
+	//return pow(exp(x), -1);
+	//return pow(pow(2, x), -1);
+	return pow(x, -3);
+}
+
+double fitness_schwefel(double x)
+{
+	return pow(x, -1);
+}
+
+constexpr double mutation_probability = 0.01;
+constexpr double crossover_probability = 0.2;
+
+void evolve(vector<pair<vector<char>, double>>& pop)
+{
+	double sum = 0;
+	for (auto& cromozom : pop)
+		sum += cromozom.second;
+	//cout << sum << '\n';
+	vector<double> prob;
+	vector<double> sum_prob;
+	prob.reserve(pop.size());
+	sum_prob.reserve(pop.size()+1);
+	sum_prob.push_back(0);
+	for (int i = 0; i < pop.size(); i++)
+	{
+		prob.push_back(pop[i].second / sum);
+		sum_prob.push_back(prob.back());
+		sum_prob[i+1] += sum_prob[i];
+	}
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	mt19937_64 real_generator(seed);
+	uniform_real_distribution<double> real_distribution(0.0, 1.0);
+	vector<pair<vector<char>, double>> new_pop;
+	new_pop.reserve(pop.size());
+	for (int i = 0; i < pop.size(); i++)
+	{
+		double rnd = real_distribution(real_generator);
+		for (int j = 0; j < pop.size(); j++)
+		{
+			if (sum_prob[j] < rnd && rnd <= sum_prob[j+1])
+			{
+				new_pop.push_back(pop[j]);
+				break;
+			}
+		}
+	}
+
+	//mutation
+	for (auto& cromozom : new_pop)
+	{
+		for (auto& bit : cromozom.first)
+		{
+			double rnd = real_distribution(real_generator);
+			if (rnd < mutation_probability)
+				bit = !bit;
+		}
+	}
+
+	//crossover
+	vector<pair<double, int>> crossover_prob;
+	crossover_prob.reserve(pop.size());
+	for (int i = 0; i < new_pop.size(); i++)
+		crossover_prob.emplace_back(real_distribution(real_generator), i);
+	sort(crossover_prob.begin(), crossover_prob.end());
+	for (int i = 1; i < crossover_prob.size() && crossover_prob[i].first < crossover_probability; i += 2)
+	{
+		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+		mt19937_64 int_generator(seed);
+		std::uniform_int_distribution<int> int_distribution(1, new_pop[i].first.size() - 2);
+		int cut_point = int_distribution(int_generator);
+		for (int j = 0; j < cut_point; j++)
+			swap(new_pop[i].first[j], new_pop[i - 1].first[j]);
+
+	}
+	pop = new_pop;
+}
+
+void test_ga(int n, int prec, double a, double b, function<double(vector<double>&)> func, function<double(double)> fitness, string file_name)
+{
+	auto start = chrono::system_clock::now();
+
+	ofstream fout(file_name);
+	int l = length(a, b, prec);
+	int L = l * n;
+	int pop_size = 100;
+	vector<pair<vector<char>, double>> pop(pop_size, { vector<char>(L),0 });
+
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	seed = seed * (file_name.back() - '0');
+	mt19937 rand(seed);
+
+	for (auto& cromozom : pop)
+	{
+		for (auto& i : cromozom.first)
+			i = rand() % 2;
+		auto decoded = decode(cromozom.first, n, l, a, b);
+		cromozom.second = fitness(func(decoded));
+	}
+
+	double minim = 1e9;
+
+	for (int generatii = 1; generatii <= 1000; generatii++)
+	{
+		evolve(pop);
+		for (auto& cromozom : pop)
+		{
+			auto decoded = decode(cromozom.first, n, l, a, b);
+			auto val = func(decoded);
+			minim = min(minim, val);
+			cromozom.second = fitness(val);
+		}
+		/*if (generatii % 10 == 0)
+			cout << minim << '\n';*/
+	}
+
+	double minim2 = 1e9;
+
+	for (auto& cromozom : pop)
+	{
+		auto decoded = decode(cromozom.first, n, l, a, b);
+		auto val = func(decoded);
+		minim2 = min(minim2, val);
+	}
+
+	fout << minim << ' ' << minim2 << '\n';
+
+	auto end = chrono::system_clock::now();
+	auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start);
+
+	cout << "Durata: " << elapsed.count() << " milisecunde\n";
+}
+
+void test_function(int n, int prec, double a, double b, function<double(vector<double>&)> func, function<double(double)> fitness, const char* func_name)
+{
+	for (int i = 0; i < 5; i++)
+		test_ga(n, prec, a, b, func, fitness, func_name + "_"s + to_string(i));
+	/*for (int i = 0; i < 4; i++)
+	{
+		unique_ptr<thread> threads[8];
+		for (int thread_number = 0; thread_number < 8; thread_number++)
+			threads[thread_number] = make_unique<thread>(test_ga, n, prec, a, b, func, func_name + "_"s + to_string(n) + "_ga"s + to_string(i * 8 + thread_number));
+		for (int thread_number = 0; thread_number < 8; thread_number++)
+			threads[thread_number]->join();
+	}*/
+}
+
+
+int main()
+{
+	//test_function(5, 5, -5.12, 5.12, deJong, fitness_dejong, "deJong");
+	//test_function(10, 5, -5.12, 5.12, deJong, fitness_dejong, "deJong");
+	//test_function(30, 5, -5.12, 5.12, deJong, fitness_dejong, "deJong");
+
+	//test_function(5, 5, -500, 500, schwefel, fitness_schwefel, "Schwefel");
+	//test_function(10, 5, -500, 500, schwefel, fitness_schwefel, "Schwefel");
+	test_function(30, 5, -500, 500, schwefel, fitness_schwefel, "Schwefel");
+
+	/*test_function(5, 5, -5.12, 5.12, rastrigin, "Rastrigin");
+	test_function(10, 5, -5.12, 5.12, rastrigin, "Rastrigin");
+	test_function(30, 5, -5.12, 5.12, rastrigin, "Rastrigin");
+
+	test_function(5, 5, 0, PI, michalewicz, "Michalewicz");
+	test_function(10, 5, 0, PI, michalewicz, "Michalewicz");
+	test_function(30, 5, 0, PI, michalewicz, "Michalewicz");*/
+	return 0;
+}

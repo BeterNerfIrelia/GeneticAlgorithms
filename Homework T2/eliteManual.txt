@@ -1,0 +1,126 @@
+path = std::string("Output/Rastrigin/100/1000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[0];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	100	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	100	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	100	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/100/1000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[1];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	100	1000	Elite	" << per << "	" << crossName[1] << '\n';
+preTheThing(populationSize[0], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	100	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	100	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/100/10000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[0];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	100	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	100	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	100	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/100/10000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[1];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	100	10000	Elite	" << per << "	" << crossName[1] << '\n';
+preTheThing(populationSize[0], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	100	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	100	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[0], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/200/1000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[0];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	200	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	200	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	200	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[0], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/200/1000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[1];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	200	1000	Elite	" << per << "	" << crossName[1] << '\n';
+preTheThing(populationSize[1], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	200	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	200	1000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[0], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/200/10000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[0];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	200	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	200	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	200	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[1], methods[2].first, methods[2].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);
+
+
+path = std::string("Output/Rastrigin/200/10000/Elite/");
+path += std::to_string(per);
+path += std::string("/");
+path += crossName[1];
+path += std::string("/");
+std::cout << path << '\n';
+std::cout << "\n Rastrigin    	5	200	10000	Elite	" << per << "	" << crossName[1] << '\n';
+preTheThing(populationSize[1], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[0], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	10	200	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[1], interval[3].first, interval[3].second, path, 0);
+
+std::cout << "\n Rastrigin    	30	200	10000	Elite	" << per << "	" << crossName[0] << '\n';
+preTheThing(populationSize[1], generations[1], methods[3].first, methods[3].second, per, pairs[3].second.first, pairs[3].second.second, DIMS[2], interval[3].first, interval[3].second, path, 0);

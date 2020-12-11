@@ -1,0 +1,368 @@
+100 1000 WE   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+0.718133333333333  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+1.39793333333333  =Time mean
+
+
+30
+5.61345e-05  =Minimum
+0.000403649  =Maximum
+0.000168338226666667  =Mean
+9.13768390780838e-05  =SD
+Q1
+0.0022099183  =Q1 mean
+Q2
+0.00021654171  =Q2 mean
+Q3
+0.000173109326666667  =Q3 mean
+Time
+4.1827  =Time mean
+
+
+100 1000 WR   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+0.7158  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+1.40813333333333  =Time mean
+
+
+30
+6.53043e-05  =Minimum
+0.000654718  =Maximum
+0.000217928846666667  =Mean
+0.000122605308356547  =SD
+Q1
+0.00312884333333333  =Q1 mean
+Q2
+0.000333463133333333  =Q2 mean
+Q3
+0.00023773028  =Q3 mean
+Time
+4.17843333333333  =Time mean
+
+
+100 10000 WE   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+6.78406666666667  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+12.9483666666667  =Time mean
+
+
+30
+1.73338e-05  =Minimum
+0.000365158  =Maximum
+0.00015574476  =Mean
+8.3649673286876e-05  =SD
+Q1
+0.000143238903333333  =Q1 mean
+Q2
+0.000142906326666667  =Q2 mean
+Q3
+0.000129172763333333  =Q3 mean
+Time
+38.4989666666667  =Time mean
+
+
+100 10000 WR   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+7.2298  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+14.1624333333333  =Time mean
+
+
+30
+6.78542e-05  =Minimum
+0.00220456  =Maximum
+0.000306286826666667  =Mean
+0.000384229556007123  =SD
+Q1
+0.00022299196  =Q1 mean
+Q2
+0.00030787438  =Q2 mean
+Q3
+0.000233628363333333  =Q3 mean
+Time
+39.264  =Time mean
+
+
+200 1000 WE   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+1.33543333333333  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+2.5471  =Time mean
+
+
+30
+1.56036e-06  =Minimum
+1.96527e-05  =Maximum
+5.82872866666667e-06  =Mean
+3.81163918300136e-06  =SD
+Q1
+0.000160093553333333  =Q1 mean
+Q2
+7.59058266666667e-06  =Q2 mean
+Q3
+4.88452233333333e-06  =Q3 mean
+Time
+7.51446666666667  =Time mean
+
+
+200 1000 WR   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+1.30446666666667  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+2.5438  =Time mean
+
+
+30
+4.5673e-06  =Minimum
+3.33862e-05  =Maximum
+1.10294353333333e-05  =Mean
+5.87697443852012e-06  =SD
+Q1
+0.000252398946666667  =Q1 mean
+Q2
+1.34625223333333e-05  =Q2 mean
+Q3
+9.435394e-06  =Q3 mean
+Time
+7.69  =Time mean
+
+
+200 10000 WE   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+13.9493333333333  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+27.6733  =Time mean
+
+
+30
+1.75681e-06  =Minimum
+1.56185e-05  =Maximum
+5.540416e-06  =Mean
+3.33670152355286e-06  =SD
+Q1
+8.48004366666667e-06  =Q1 mean
+Q2
+6.34112333333333e-06  =Q2 mean
+Q3
+6.999462e-06  =Q3 mean
+Time
+83.1601333333333  =Time mean
+
+
+200 10000 WR   
+5
+1.1921e-10  =Minimum
+1.1921e-10  =Maximum
+1.1921e-10  =Mean
+0  =SD
+Q1
+1.1921e-10  =Q1 mean
+Q2
+1.1921e-10  =Q2 mean
+Q3
+1.1921e-10  =Q3 mean
+Time
+13.5613  =Time mean
+
+
+10
+2.38419e-10  =Minimum
+2.38419e-10  =Maximum
+2.38419e-10  =Mean
+0  =SD
+Q1
+2.38419e-10  =Q1 mean
+Q2
+2.38419e-10  =Q2 mean
+Q3
+2.38419e-10  =Q3 mean
+Time
+27.2465333333333  =Time mean
+
+
+30
+3.46008e-06  =Minimum
+3.2411e-05  =Maximum
+1.2449074e-05  =Mean
+6.81398157930144e-06  =SD
+Q1
+8.62821566666667e-06  =Q1 mean
+Q2
+1.06793986666667e-05  =Q2 mean
+Q3
+1.02787496666667e-05  =Q3 mean
+Time
+79.6941666666667  =Time mean
+
+

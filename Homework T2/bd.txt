@@ -1,0 +1,4 @@
+select id_curs, count(valoare)
+from note
+where id_cursM<22
+group by id_curshaving count(valoare)>8;

@@ -1,0 +1,24 @@
+ok
+intru in functia de selectie elite
+    1. sortez crescator populatia crescator dupa fitness
+    2. fac crossover elite la top 20 indivizi, astfel, adaugandu-se 20 de indivizi la populatie <=> 120 de indivizi in populatie
+    3. sortez crescator dupa fitness noua populatie de 120 de indivizi
+    4. cei mai buni 20 de indivizi vor fi selectati automat pentru populatia noua.
+    5. pentru ceilalti 100 de indivizi ramasi, fac roata norocului sa vad care 80 de indivizi vor fi in populatia noua
+        5.i) roata norocului ar trebui sa fie ok
+        5.ii) fac fitness-ul total al populatiei
+        5.iii) fac vectorul de probabilitati: fitness/totalFitness
+        5.iv) fac vectorul de sume de probabilitati
+        5.v) selectez popWheel indivizi cu roata(popWheel = 80 in cazul asta)
+    
+si astfel ajung cu o anumita populatie
+intru in functia de mutatie care ar trebui sa fie buna
+    1. pentru fiecare individ
+    2. pentru fiecare bit al lui
+    3. verific daca se va aplica mutatia pe el
+
+dupa vine functia de crossover:
+    1. fac vecotrul de probabilitati si indici
+    2. il sortez crescator dupa probabilitatea de crossover
+    3. iau perechi sa faca crossover pana trec de pragul de probabilitate de crossover
+

@@ -1,0 +1,21 @@
+﻿  AGHomework2.cpp
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(875,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(893,13): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(914,20): warning C4018: '<': signed/unsigned mismatch
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(942,2): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(954,2): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(1130,31): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(1151,2): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(1176,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(1178,2): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(1200,56): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+  Generating code
+  1 of 1107 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  AGHomework2.vcxproj -> D:\WID\Facultate\AGHomework2\x64\Release\AGHomework2.exe

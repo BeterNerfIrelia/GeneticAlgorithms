@@ -1,0 +1,5 @@
+Rastrigin
+Michalewicz
+De Jong
+Schwefel sqrt
+Schwefel atan

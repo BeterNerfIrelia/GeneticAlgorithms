@@ -1,0 +1,772 @@
+// AGHomework2.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+#pragma warning(disable: 4096)
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <functional>
+#include <fstream>
+#include <thread>
+#include <sstream>
+#include <string>
+#include <climits>
+#include <random>
+#include <chrono>
+#include <utility>
+#include <algorithm>
+#include <cstdlib>
+
+#define PI 3.14159265358979
+#define M 10
+
+double a, b;
+int prec = 5;
+int dimLength;
+//const int population = 100;
+
+const double mutateProb = 0.01;
+const double crossoverProb = 0.20;
+const double addition = 0.000000000000001;
+const double PI2 = PI / 2.0;
+
+std::mt19937_64 mt_rand;
+
+double dejong(std::vector<double>& vec);
+double dejongFitness(double val);
+
+double schwefel(std::vector<double>& vec);
+double schwefelFitness1(double val);
+double schwefelFitness2(double val);
+double schwefelFitness3(double val);
+
+double rastrigin(std::vector<double>& vec);
+double rastriginFitness(double val);
+
+double michalewicz(std::vector<double>& vec);
+double michalewiczFitness(double val);
+
+int length(double a, double b, int prec);
+
+double decodeDimension(std::vector<char>::iterator itStart, std::vector<char>::iterator itEnd, int dimLength, double a, double b);
+
+std::vector<double> decode(std::vector<char>& bits, int dimLength, unsigned int dimensions, double a, double b);
+
+void generatePopulation(std::vector<std::pair<std::vector<char>, double>>& pop, int population,int domainSize);
+
+void evaluatePopulation(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double a, double b);
+
+void mutate(std::vector<std::pair<std::vector<char>, double>>& pop, int domainSize);
+
+std::vector<std::pair<std::vector<char>, double>> crossReplace(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::uniform_int_distribution<int> gen);
+
+std::vector<std::pair<std::vector<char>, double>> crossElite(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, std::uniform_int_distribution<int> gen, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit);
+
+void crossover(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, short functionNo, double lowerLimit, double upperLimit, int dimLength, int dimensions);
+
+void wheelOfFortune(std::vector<std::pair<std::vector<char>, double>>& pop, int popWheel);
+
+void selectWheel(std::vector<std::pair<std::vector<char>, double>>& pop);
+
+void selectElite(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit,int percent);
+
+void selectTournament(std::vector<std::pair<std::vector<char>, double>>& pop, int k);
+
+void select(std::vector<std::pair<std::vector<char>, double>>& pop, int selectNo, int percent,std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit, int k=0);
+
+void doTheThing(int population, int generations, int selectNo, short crossNo, int percent, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc,  unsigned int dimensions, double lowerLimit, double upperLimit,std::string path,int k=0);
+
+int getThreadID(std::thread::id id);
+
+void preTheThing(int population, int generations, int selectNo, short crossNo, int percent, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, unsigned int dimensions, double lowerLimit, double upperLimit, std::string path, int k = 0);
+
+int main()
+{
+	mt_rand = std::mt19937_64(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+
+	//std::vector<std::pair<std::vector<char>, double>> pop(200);
+	//a = -5.12;
+	//b = 5.12;
+	//prec = 5;
+	//dimLength = length(a, b, prec);
+	//int domainSize = dimLength * dimensions;
+
+	//int T = 0;
+	//generatePopulation(pop, 200, domainSize);
+	//evaluatePopulation(pop, dejong, dejongFitness, dimLength, dimensions, a, b);
+	//while (T < 10000)
+	//{
+	//	select(pop, selectNo, percent, func, fitFunc, dimLength, dimensions, a, b);
+	//	mutate(pop, domainSize);
+	//	crossover(pop, func, fitFunc, crossNo, a, b, dimLength, dimensions);
+	//	evaluatePopulation(pop, func, fitFunc, dimLength, dimensions, a, b);
+	//	++T;
+	//}
+
+	//for (int i = 0; i < popSize; ++i)
+	//{
+	//	if (i == 0)
+	//	{
+	//		auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+	//		auto value = func(config);
+	//		mini = value;
+	//	}
+	//	else
+	//	{
+	//		auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+	//		auto value = func(config);
+	//		if (value < mini)
+	//			mini = value;
+	//	}
+	//}
+
+	std::vector<std::pair<int, int>> methods;
+	methods.reserve(6);
+	for (int i = 0; i <= 2; ++i)
+		for (int j = 0; j <= 1; ++j)
+			methods.emplace_back(i, j);
+
+	std::vector<int> populationSize;
+	populationSize.reserve(2);
+	populationSize.push_back(100);
+	populationSize.push_back(200);
+	//populationSize.push_back(500);
+
+	std::vector<int> generations;
+	generations.reserve(3);
+	generations.push_back(1000);
+	//generations.push_back(2500);
+	generations.push_back(5000);
+	//generations.push_back(7500);
+	generations.push_back(10000);
+
+	std::vector<int> percentage;
+	percentage.reserve(4);
+	percentage.push_back(4);
+	percentage.push_back(10);
+	percentage.push_back(25);
+	percentage.push_back(70);
+
+	std::vector<std::pair<double, double>> interval;
+	interval.reserve(6);
+	interval.emplace_back(-5.12, 5.12);
+	interval.emplace_back(-500.0, 500.0);
+	interval.emplace_back(-500.0, 500.0);
+	interval.emplace_back(-500.0, 500.0);
+	interval.emplace_back(-5.12, 5.12);
+	interval.emplace_back(0.0, PI);
+
+	std::vector<int> ktourn;
+	ktourn.reserve(4);
+	ktourn.push_back(2);
+	ktourn.push_back(3);
+	ktourn.push_back(4);
+	ktourn.push_back(7);
+
+	std::vector<std::string> selection;
+	selection.reserve(3);
+	selection.emplace_back("Wheel");
+	selection.emplace_back("Elite");
+	selection.emplace_back("Tournament");
+
+	std::vector<std::string> crossName;
+	crossName.reserve(2);
+	crossName.emplace_back("Replace");
+	crossName.emplace_back("Elite");
+	
+
+	std::vector<std::pair<std::string, std::pair<std::function<double(std::vector<double>&)>,std::function<double(double)>>>> pairs;
+	pairs.reserve(6);
+	pairs.emplace_back("DeJong", std::make_pair(dejong, dejongFitness));
+	pairs.emplace_back("Schwefel", std::make_pair(schwefel, schwefelFitness1));
+	pairs.emplace_back("Schwefel", std::make_pair(schwefel, schwefelFitness2));
+	pairs.emplace_back("Schwefel", std::make_pair(schwefel, schwefelFitness3));
+	pairs.emplace_back("Rastrigin", std::make_pair(rastrigin, rastriginFitness));
+	pairs.emplace_back("Michalewicz", std::make_pair(michalewicz, michalewiczFitness));
+	
+	std::vector<unsigned int> DIMS;
+	DIMS.reserve(3);
+	DIMS.push_back(5);
+	DIMS.push_back(10);
+	DIMS.push_back(30);
+
+	std::string path;
+
+	//for (int i = 0; i < 30; ++i)
+	//	preTheThing(populationSize[0], generations[0], methods[5].first, methods[5].second,0,pairs[0].second.first,pairs[0].second.second,DIMS[0],interval[0].first,interval[0].second,path,4);
+
+	std::cout << "De Jong   Wheel  Replace\n\n";
+	path = std::string(".\\Output\\DeJong\\100\\1000\\Wheel\\Replace\\");
+	preTheThing(populationSize[0], generations[0], methods[0].first, methods[0].second, 0, pairs[0].second.first, pairs[0].second.second, DIMS[0], interval[0].first, interval[0].second, path, 0);
+	//for (int i = 0; i < 30; ++i)
+	//{
+	//	preTheThing(populationSize[0], generations[0], methods[0].first, methods[0].second, 0, pairs[0].second.first, pairs[0].second.second, DIMS[0], interval[0].first, interval[0].second, path, 0);
+	//}
+	std::cout << "terminat.\n\n";
+	return 0;
+}
+
+double dejong(std::vector<double>& vec)
+{
+	double result = 0;
+	for (double d : vec)
+	{
+		result += (d * d);
+	}
+	return result;
+}
+
+double dejongFitness(double val)
+{
+	return pow(val, -25);
+}
+
+double schwefel(std::vector<double>& vec)
+{
+	double result = 0;
+	for (double d : vec)
+	{
+		result += (-d * sin(sqrt(abs(d))));
+	}
+	return result;
+}
+
+double schwefelFitness1(double val)
+{
+	return pow(((atan(val) + PI2) / PI),-25);  // tinde -11.5k
+
+	//return pow(1.015, (sqrt(pow((atan(val) + PI2) / PI, -2))));   //tinde bine
+	//return pow(1.015, ((pow((atan(val) + PI2) / PI, -1))));  // e aceeasi ca ^^, dar da oleaca mai bad, dar nu mult
+}
+
+double schwefelFitness2(double val)
+{
+	return pow(1.015, (sqrt(pow((atan(val) + PI2) / PI, -2))));
+}
+
+double schwefelFitness3(double val)
+{
+	return pow(1.015, ((pow((atan(val) + PI2) / PI, -1))));
+}
+
+double rastrigin(std::vector<double>& vec)
+{
+	double result = 10.0 * vec.size();
+	for (double d : vec)
+	{
+		result += (pow(d, 2) - 10 * cos(2.0 * PI * d));
+	}
+
+	return result;
+}
+
+double rastriginFitness(double val)
+{
+	return pow(val, -15);
+}
+
+double michalewicz(std::vector<double>& vec)
+{
+	double result = 0;
+	int size = vec.size();
+	for (int i = 1; i <= size; ++i)
+	{
+		result += (sin(vec[i - 1]) * pow(sin((i * pow(vec[i - 1], 2)) / PI), 2 * M));
+	}
+
+	result *= -1;
+	return result;
+}
+
+double michalewiczFitness(double val)
+{
+	//return exp2(-20 * val) * pow(-val,2); //idk. cam la fel, dar tinde la 27.5, 28
+	return pow(pow(0.734375, -val), -10);   //parca bun
+}
+
+int length(double a, double b, int prec)
+{
+	return ceil(log((b - a) * pow(10, prec)) / log(2));
+}
+
+double decodeDimension(std::vector<char>::iterator itStart, std::vector<char>::iterator itEnd, int dimLength, double a, double b)
+{
+	//coordonata intr-o dimensiune.
+	unsigned long bi = 0;
+	for (auto it = itStart; it != itEnd; ++it)
+	{
+		bi *= 2;
+		bi += *it;
+	}
+
+	double s = bi / (pow(2, dimLength) - 1);
+	return s * (b - a) + a;
+}
+
+std::vector<double> decode(std::vector<char>& bits, int dimLength, unsigned int dimensions, double a, double b)
+{
+	std::vector<double> returnVec;
+	std::vector<char>::iterator itStart, itEnd;
+	for (int i = 0; i < dimensions; ++i)
+	{
+		itStart = bits.begin() + i * dimLength;
+		itEnd = itStart + dimLength;
+
+		double value = decodeDimension(itStart, itEnd, dimLength, a, b);
+		returnVec.push_back(value);
+	}
+
+	return returnVec;
+}
+
+void generatePopulation(std::vector<std::pair<std::vector<char>, double>>& pop, int population,int domainSize)
+{
+	std::uniform_int_distribution<int> gen(0, 1);
+	for (int i = 0; i < population; ++i)
+	{
+		pop[i].first.reserve(domainSize);
+		for (int j = 0; j < domainSize; ++j)
+		{
+			auto bit = gen(mt_rand);
+			pop[i].first.push_back(bit);
+		}
+	}
+}
+
+void evaluatePopulation(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double a, double b)
+{
+	for (int i = pop.size() - 1; i >= 0; --i)
+	{
+		auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+		auto value = func(config);
+		pop[i].second = fitFunc(value);
+	}
+}
+
+void mutate(std::vector<std::pair<std::vector<char>, double>>& pop, int domainSize)
+{
+	std::uniform_real_distribution<double> uniGen(0.0, 1.0);
+	double randValue;
+	for (int i = pop.size() - 1; i >= 0; --i)
+		for (int j = 0; j < domainSize; ++j)
+		{
+			randValue = uniGen(mt_rand);
+			if (randValue < mutateProb)
+				pop[i].first[j] = !pop[i].first[j];
+		}
+}
+
+std::vector<std::pair<std::vector<char>, double>> crossReplace(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::uniform_int_distribution<int> gen)
+{
+	std::vector<std::pair<std::vector<char>, double>> newGen;
+
+	auto child1 = parent1, child2 = parent2;
+	int cutPoint = gen(mt_rand);
+	for (int i = 0; i < cutPoint; ++i)
+		std::swap(child1.first[i], child2.first[i]);
+	
+	newGen.push_back(child1);
+	newGen.push_back(child2);
+	return newGen;
+}
+
+std::vector<std::pair<std::vector<char>, double>> crossElite(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, std::uniform_int_distribution<int> gen, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit)
+{
+	std::vector<std::pair<std::vector<char>, double>> tempGen, newGen;
+	tempGen.push_back(parent1);
+	tempGen.push_back(parent2);
+	
+	auto child1 = parent1, child2 = parent2;
+	int cutPoint = gen(mt_rand);
+	for (int i = 0; i < cutPoint; ++i)
+		std::swap(child1.first[i], child2.first[i]);
+
+	auto child1Config = decode(child1.first, dimLength, dimensions, lowerLimit, upperLimit);
+	auto child1Value = func(child1Config);
+	child1.second = fitFunc(child1Value);
+
+	auto child2Config = decode(child2.first, dimLength, dimensions, lowerLimit, upperLimit);
+	auto child2Value = func(child2Config);
+	child2.second = fitFunc(child2Value);
+
+	tempGen.push_back(child1);
+	tempGen.push_back(child2);
+
+	auto compare = [](const std::pair<std::vector<char>, double>& a, const std::pair<std::vector<char>, double>& b) -> bool {
+		return a.second < b.second;
+	};
+
+	std::sort(tempGen.begin(), tempGen.end(), compare);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		newGen.push_back(tempGen.back());
+		tempGen.pop_back();
+	}
+
+	return newGen;
+}
+
+void crossover(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, short functionNo, double lowerLimit, double upperLimit, int dimLength, int dimensions)
+{
+	std::vector<std::pair<double,int>> pcx;
+	auto popSize = pop.size();
+	pcx.reserve(popSize);
+
+	std::uniform_real_distribution<double> uniGen(0.0, 1.0);
+	for (int i = 0; i < popSize; ++i)
+		pcx.emplace_back(uniGen(mt_rand), i);
+
+	auto compare = [](const std::pair<double, int>& a, const std::pair<double, int>& b) -> bool {
+		return a.first < b.first;
+	};
+	std::sort(pcx.begin(), pcx.end(), compare);
+
+	auto domainSize = dimLength * dimensions;
+
+	std::uniform_int_distribution<int> gen(1, domainSize - 2);
+
+	for (int i = 1; i < popSize && pcx[i - 1].first < crossoverProb; i += 2)
+	{
+		if (pcx[i].first > crossoverProb)
+		{
+			auto randVal = uniGen(mt_rand);
+			if (randVal < 0.5)
+			{
+				switch (functionNo)
+				{
+					case 0:
+					{
+						//replaceCross
+						auto newGen = crossReplace(pop[pcx[i - 1].second], pop[pcx[i].second], gen);
+						pop[pcx[i - 1].second] = newGen[0];
+						pop[pcx[i].second] = newGen[1];
+						break;
+					}
+					case 1:
+					{
+						//elitCross
+						auto newGen = crossElite(pop[pcx[i - 1].second], pop[pcx[i].second], func, fitFunc, gen, dimLength, dimensions, lowerLimit, upperLimit);
+						pop[pcx[i - 1].second] = newGen[0];
+						pop[pcx[i].second] = newGen[1];
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+		else
+		{
+			switch (functionNo)
+			{
+				case 0:
+				{
+					//replaceCross
+					auto newGen = crossReplace(pop[pcx[i - 1].second], pop[pcx[i].second], gen);
+					pop[pcx[i - 1].second] = newGen[0];
+					pop[pcx[i].second] = newGen[1];
+					break;
+				}
+				case 1:
+				{
+					//elitCross
+					auto newGen = crossElite(pop[pcx[i - 1].second], pop[pcx[i].second], func, fitFunc, gen, dimLength, dimensions, lowerLimit, upperLimit);
+					pop[pcx[i - 1].second] = newGen[0];
+					pop[pcx[i].second] = newGen[1];
+					break;
+				}
+				default:
+					break;
+			}
+		}
+	}
+}
+
+void wheelOfFortune(std::vector<std::pair<std::vector<char>, double>>& pop,int popWheel)
+{
+	double totalFitness = 0.0;
+	auto popSize = pop.size();
+	for (int i = 0; i < popSize; ++i)
+		totalFitness += pop[i].second;
+
+	std::vector<double> sumProb, prob;
+	prob.reserve(popSize);
+	sumProb.reserve(popSize + 1);
+	sumProb.push_back(0);
+
+	for (int i = 0; i < popSize; ++i)
+	{
+		prob.push_back(pop[i].second / totalFitness);
+		sumProb.push_back(sumProb.back() + prob.back());
+	}
+
+	std::uniform_real_distribution<double> uniGen(0.0, 1.0);
+	double randValue;
+
+	std::vector<std::pair<std::vector<char>, double>> newPop;
+	newPop.reserve(popWheel);
+
+	for (int i = 0; i < popWheel; ++i)
+	{
+		randValue = uniGen(mt_rand);
+		for (int j = 0; j < popSize; ++j)
+			if (sumProb[j] < randValue && randValue <= sumProb[j + 1])
+			{
+				newPop.push_back(pop[j]);
+				break;
+			}
+	}
+
+	pop = newPop;
+}
+
+void selectWheel(std::vector<std::pair<std::vector<char>, double>>& pop)
+{
+	wheelOfFortune(pop,pop.size());
+}
+
+void selectElite(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit, int percent)
+{
+	auto ascend = [](const std::pair<std::vector<char>, double>& a, const std::pair<std::vector<char>, double>& b) -> bool {
+		return a.second < b.second;
+	};
+
+	std::sort(pop.begin(), pop.end(), ascend);
+	//auto newPop = pop;
+	std::vector<std::pair<std::vector<char>, double>> newPop;
+	newPop.reserve(150);
+	newPop = pop;
+	auto popSize = pop.size();
+
+	auto domainSize = dimLength * dimensions;
+	std::vector<std::pair<std::vector<char>, double>> children,temp;
+	temp.reserve(2);
+	children.reserve(2);
+	std::uniform_int_distribution<int> intGen(1, domainSize - 2);
+	for (int i = popSize - 1; i > popSize - 20; i -= 2)
+	{
+		children.push_back(pop[i]);
+		children.push_back(pop[i - 1]);
+		temp = crossElite(children[0], children[1], func, fitFunc, intGen, dimLength, dimensions, lowerLimit, upperLimit);
+		newPop.push_back(children[0]);
+		newPop.push_back(children[1]);
+		children.pop_back();
+		children.pop_back();
+	}
+
+	//auto temp2 = pop;
+
+	std::vector<std::pair<std::vector<char>, double>> nextGen;
+	nextGen.reserve(100);
+
+	std::sort(newPop.begin(), newPop.end(), ascend);
+	int cromosomes = (int)((double)percent / 100.0 * pop.size());
+	for (int i = 0; i < cromosomes; ++i)
+	{
+		//pop[i] = newPop.back();
+		nextGen.push_back(newPop.back());
+		newPop.pop_back();
+	}
+
+	wheelOfFortune(newPop,popSize- cromosomes);
+	auto nSize = newPop.size();
+	for (int i = nSize - 1; i >= 0; --i)
+	{
+		/*pop[i] = newPop.back();
+		newPop.pop_back();*/
+		//pop[i] = newPop[i - 20];
+		nextGen.push_back(newPop[i]);
+	}
+
+	pop = nextGen;
+}
+
+void selectTournament(std::vector<std::pair<std::vector<char>, double>>& pop, int k)
+{
+	std::vector<std::pair<std::vector<char>, double>> newPop,tournament;
+	auto popSize = pop.size();
+	newPop.reserve(popSize);
+	tournament.reserve(k);
+
+	auto ascend = [](const std::pair<std::vector<char>, double>& a, const std::pair<std::vector<char>, double>& b) -> bool {
+		return a.second < b.second;
+	};
+
+	std::uniform_int_distribution<int> gen(0, popSize - 1);
+	int individual;
+
+	for (int i = 0; i < popSize; ++i)
+	{
+		for (int t = 0; t < k; ++t)
+		{
+			individual = gen(mt_rand);
+			tournament.push_back(pop[t]);
+		}
+		std::sort(tournament.begin(), tournament.end(), ascend);
+		newPop.push_back(tournament.back());
+		tournament.clear();
+	}
+	pop = newPop;
+}
+
+void select(std::vector<std::pair<std::vector<char>, double>>& pop, int selectNo, int percent,std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit,int k)
+{
+	switch (selectNo)
+	{
+		case 0:
+		{
+			selectWheel(pop);
+			break;
+		}
+		case 1:
+		{
+			selectElite(pop, func, fitFunc, dimLength, dimensions, lowerLimit, upperLimit, percent);
+			break;
+		}
+		case 2:
+		{
+			selectTournament(pop, k);
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void preTheThing(int population, int generations, int selectNo, short crossNo, int percent, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, unsigned int dimensions, double lowerLimit, double upperLimit, std::string path, int k)
+{
+	//doTheThing(population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//return;
+	//for (int i = 0; i < 3; ++i)
+	//{
+	//	std::thread t1(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t2(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t3(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t4(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t5(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t6(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t7(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t8(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t9(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+	//	std::thread t10(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+
+	//	t1.join();
+	//	t2.join();
+	//	t3.join();
+	//	t4.join();
+	//	t5.join();
+	//	t6.join();
+	//	t7.join();
+	//	t8.join();
+	//	t9.join();
+	//	t10.join();
+
+	//	std::cout << path << "\n Finished iteration " << i << "\n\n";
+	//}
+	for (int i = 0; i < 6; ++i)
+	{
+		std::thread t1(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+		std::thread t2(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+		std::thread t3(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+		std::thread t4(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+		std::thread t5(doTheThing, population, generations, selectNo, crossNo, percent, func, fitFunc, dimensions, lowerLimit, upperLimit, path, k);
+
+		t1.join();
+		t2.join();
+		t3.join();
+		t4.join();
+		t5.join();
+	}
+}
+
+void doTheThing(int population,int generations,int selectNo, short crossNo, int percent, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, unsigned int dimensions, double lowerLimit, double upperLimit, std::string path,int k)
+{
+	std::vector<std::pair<std::vector<char>, double>> pop(population);
+	a = lowerLimit;
+	b = upperLimit;
+	prec = 5;
+	dimLength = length(a, b, prec);
+	int domainSize = dimLength * dimensions;
+
+	int T = 0;
+	path += std::to_string(dimensions);
+	path += std::string("_THREAD_");
+	int id = getThreadID(std::this_thread::get_id());
+	path += std::to_string(id);
+	path += std::string("_");
+	path += std::to_string(mt_rand());
+	path += std::string(".txt");
+
+	std::ofstream fout(path);
+	auto popSize = pop.size();
+	double mini;
+
+	auto startTime = clock();
+
+	generatePopulation(pop, population, domainSize);
+	evaluatePopulation(pop, func, fitFunc, dimLength, dimensions, a, b);
+	while (T < generations)
+	{
+		if (T == 250 || T == 500 || T == 750)
+		{
+			for (int i = 0; i < popSize; ++i)
+			{
+				if (i == 0)
+				{
+					auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+					auto value = func(config);
+					mini = value;
+				}
+				else
+				{
+					auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+					auto value = func(config);
+					if (value < mini)
+						mini = value;
+				}
+			}
+			fout << mini << '\n';
+		}
+		select(pop, selectNo, percent, func, fitFunc, dimLength, dimensions, a, b, k);
+		mutate(pop, domainSize);
+		crossover(pop, func, fitFunc, crossNo, a, b, dimLength, dimensions);
+		evaluatePopulation(pop, func, fitFunc, dimLength, dimensions, a, b);
+		++T;
+	}
+
+	//for (int i = pop.size() - 1; i >= 0; --i)
+	//{
+	//	auto ceva = decode(pop[i].first, dimLength, dimensions, a, b);
+	//	auto altceva = func(ceva);
+	//	std::cout << altceva << '\n';
+	//}
+
+	auto endTime = clock();
+
+	for (int i = 0; i < popSize; ++i)
+	{
+		if (i == 0)
+		{
+			auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+			auto value = func(config);
+			mini = value;
+		}
+		else
+		{
+			auto config = decode(pop[i].first, dimLength, dimensions, a, b);
+			auto value = func(config);
+			if (value < mini)
+				mini = value;
+		}
+	}
+	fout << mini << '\n' << ((double)endTime - startTime) / CLOCKS_PER_SEC;
+	fout.close();
+	//std::cout << "\n" << mini << "\n" << ((double)endTime - startTime) / CLOCKS_PER_SEC << " seconds\n\n";
+}
+
+int getThreadID(std::thread::id id)
+{
+	std::stringstream read;
+	read << id;
+	return stoi(read.str());
+}

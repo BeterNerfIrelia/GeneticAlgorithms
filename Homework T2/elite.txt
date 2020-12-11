@@ -1,0 +1,216 @@
+void wheelOfFortune(std::vector<std::pair<std::vector<char>, double>>& pop,int popWheel)
+{
+	double totalFitness = 0.0;
+	auto popSize = pop.size();
+	for (int i = 0; i < popSize; ++i)
+		totalFitness += pop[i].second;
+
+	std::vector<double> sumProb, prob;
+	prob.reserve(popSize);
+	sumProb.reserve(popSize + 1);
+	sumProb.push_back(0);
+
+	for (int i = 0; i < popSize; ++i)
+	{
+		prob.push_back(pop[i].second / totalFitness);
+		sumProb.push_back(sumProb.back() + prob.back());
+	}
+
+	std::uniform_real_distribution<double> uniGen(0.0, 1.0);
+	double randValue;
+
+	std::vector<std::pair<std::vector<char>, double>> newPop;
+	newPop.reserve(popWheel);
+
+	for (int i = 0; i < popWheel; ++i)
+	{
+		randValue = uniGen(mt_rand);
+		for(int j=0;j<popSize;++j)
+			if (sumProb[j] < randValue && randValue <= sumProb[j + 1])
+			{
+				newPop.push_back(pop[j]);
+				break;
+			}
+	}
+
+	pop = newPop;
+}
+
+void selectElite(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit)
+{
+	auto ascend = [](const std::pair<std::vector<char>, double>& a, const std::pair<std::vector<char>, double>& b) -> bool {
+		return a.second < b.second;
+	};
+
+	std::sort(pop.begin(), pop.end(), ascend);
+	//auto newPop = pop;
+	std::vector<std::pair<std::vector<char>, double>> newPop;
+	newPop.reserve(150);
+	newPop = pop;
+	auto popSize = pop.size();
+
+	auto domainSize = dimLength * dimensions;
+	std::vector<std::pair<std::vector<char>, double>> children,temp;
+	temp.reserve(2);
+	children.reserve(2);
+	std::uniform_int_distribution<int> intGen(1, domainSize - 2);
+	for (int i = popSize - 1; i > popSize - 20; i -= 2)
+	{
+		children.push_back(pop[i]);
+		children.push_back(pop[i - 1]);
+		temp = crossElite(children[0], children[1], func, fitFunc, intGen, dimLength, dimensions, lowerLimit, upperLimit);
+		newPop.push_back(children[0]);
+		newPop.push_back(children[1]);
+		children.pop_back();
+		children.pop_back();
+	}
+
+	auto temp2 = pop;
+
+	std::sort(newPop.begin(), newPop.end(), ascend);
+	for (int i = 0; i < 20; ++i)
+	{
+		pop[i] = newPop.back();
+		newPop.pop_back();
+	}
+
+	wheelOfFortune(newPop,popSize-20);
+
+	for (int i = 20; i < popSize; ++i)
+	{
+		/*pop[i] = newPop.back();
+		newPop.pop_back();*/
+		pop[i] = newPop[i - 20];
+	}
+
+	//for (int i = 0; i < popSize; ++i)
+	//	std::cout << temp2[i].second << '\t' << pop[i].second << '\n';
+	//exit(0);
+}
+
+void crossover(std::vector<std::pair<std::vector<char>, double>>& pop, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, short functionNo, double lowerLimit, double upperLimit, int dimLength, int dimensions)
+{
+	std::vector<std::pair<double,int>> pcx;
+	auto popSize = pop.size();
+	pcx.reserve(popSize);
+
+	std::uniform_real_distribution<double> uniGen(0.0, 1.0);
+	for (int i = 0; i < popSize; ++i)
+		pcx.emplace_back(uniGen(mt_rand), i);
+
+	auto compare = [](const std::pair<double, int>& a, const std::pair<double, int>& b) -> bool {
+		return a.first < b.first;
+	};
+	std::sort(pcx.begin(), pcx.end(), compare);
+
+	auto domainSize = dimLength * dimensions;
+
+	std::uniform_int_distribution<int> gen(1, domainSize - 2);
+
+	for (int i = 1; i < popSize && pcx[i - 1].first < crossoverProb; i += 2)
+	{
+		if (pcx[i].first > crossoverProb)
+		{
+			auto randVal = uniGen(mt_rand);
+			if (randVal < 0.5)
+			{
+				switch (functionNo)
+				{
+					case 0:
+					{
+						//replaceCross
+						auto newGen = crossReplace(pop[pcx[i - 1].second], pop[pcx[i].second], gen);
+						pop[pcx[i - 1].second] = newGen[0];
+						pop[pcx[i].second] = newGen[1];
+						break;
+					}
+					case 1:
+					{
+						//elitCross
+						auto newGen = crossElite(pop[pcx[i - 1].second], pop[pcx[i].second], func, fitFunc, gen, dimLength, dimensions, lowerLimit, upperLimit);
+						pop[pcx[i - 1].second] = newGen[0];
+						pop[pcx[i].second] = newGen[1];
+						break;
+					}
+					default:
+						break;
+				}
+			}
+		}
+		else
+		{
+			switch (functionNo)
+			{
+				case 0:
+				{
+					//replaceCross
+					auto newGen = crossReplace(pop[pcx[i - 1].second], pop[pcx[i].second], gen);
+					pop[pcx[i - 1].second] = newGen[0];
+					pop[pcx[i].second] = newGen[1];
+					break;
+				}
+				case 1:
+				{
+					//elitCross
+					auto newGen = crossElite(pop[pcx[i - 1].second], pop[pcx[i].second], func, fitFunc, gen, dimLength, dimensions, lowerLimit, upperLimit);
+					pop[pcx[i - 1].second] = newGen[0];
+					pop[pcx[i].second] = newGen[1];
+					break;
+				}
+				default:
+					break;
+			}
+		}
+	}
+}
+
+std::vector<std::pair<std::vector<char>, double>> crossReplace(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::uniform_int_distribution<int> gen)
+{
+	std::vector<std::pair<std::vector<char>, double>> newGen;
+
+	auto child1 = parent1, child2 = parent2;
+	int cutPoint = gen(mt_rand);
+	for (int i = 0; i < cutPoint; ++i)
+		std::swap(child1.first[i], child2.first[i]);
+	
+	newGen.push_back(child1);
+	newGen.push_back(child2);
+	return newGen;
+}
+
+std::vector<std::pair<std::vector<char>, double>> crossElite(std::pair<std::vector<char>, double>& parent1, std::pair<std::vector<char>, double>& parent2, std::function<double(std::vector<double>&)> func, std::function<double(double)> fitFunc, std::uniform_int_distribution<int> gen, int dimLength, unsigned int dimensions, double lowerLimit, double upperLimit)
+{
+	std::vector<std::pair<std::vector<char>, double>> tempGen, newGen;
+	tempGen.push_back(parent1);
+	tempGen.push_back(parent2);
+	
+	auto child1 = parent1, child2 = parent2;
+	int cutPoint = gen(mt_rand);
+	for (int i = 0; i < cutPoint; ++i)
+		std::swap(child1.first[i], child2.first[i]);
+
+	auto child1Config = decode(child1.first, dimLength, dimensions, lowerLimit, upperLimit);
+	auto child1Value = func(child1Config);
+	child1.second = fitFunc(child1Value);
+
+	auto child2Config = decode(child2.first, dimLength, dimensions, lowerLimit, upperLimit);
+	auto child2Value = func(child2Config);
+	child2.second = fitFunc(child2Value);
+
+	tempGen.push_back(child1);
+	tempGen.push_back(child2);
+
+	auto compare = [](const std::pair<std::vector<char>, double>& a, const std::pair<std::vector<char>, double>& b) -> bool {
+		return a.second < b.second;
+	};
+
+	std::sort(tempGen.begin(), tempGen.end(), compare);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		newGen.push_back(tempGen.back());
+		tempGen.pop_back();
+	}
+
+	return newGen;
+}

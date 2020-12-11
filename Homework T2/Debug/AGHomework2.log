@@ -1,0 +1,4 @@
+﻿  AGHomework2.cpp
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(84,13): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+D:\WID\Facultate\AGHomework2\AGHomework2.cpp(105,20): warning C4018: '<': signed/unsigned mismatch
+  AGHomework2.vcxproj -> D:\WID\Facultate\AGHomework2\Debug\AGHomework2.exe

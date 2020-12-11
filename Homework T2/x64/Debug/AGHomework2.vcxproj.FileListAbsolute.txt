@@ -1,0 +1,2 @@
+D:\WID\Facultate\AGHomework2\x64\Debug\AGHomework2.exe
+D:\WID\Facultate\AGHomework2\x64\Debug\AGHomework2.pdb

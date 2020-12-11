@@ -1,0 +1,47 @@
+https://www.wowhead.com/fwrost-mage-gear-guide
+
+Dungeon:                               Item:                        Boss
+
+
+Halls of Atonement x4                  Weapon                   Chamberlain             crit, haste
+                                        Chest                   Halkias     crist, haste
+                                    Hands                       Echelon     crist,haste                                 M
+                                    Waist                       High Adjudicator Aleez      crit, vers                  H
+
+                                    
+
+Mists of Tirna Scithe x3
+                                    Head                            Tred'ova        haste,vers
+                                    Shoulders                       Ingra Maloch    crit,vers
+                                    Wrist                           Ingra Maloch    haste,vers                          H
+
+Spires of Ascension x3
+                                    Neck                        Kin-Tara    crist,vers got
+                                    
+                                    Cloak                      Devos        crit,haste
+                                    Feet                        Ventunax    crit,haste
+
+
+
+Plaguefall x2
+                                    Legs                        Stradama        haste,vers                              H
+                                    Ring                        Domina Venomblade   crit,haste
+
+Theather of Pain x2
+                                    Ring                        Dessia the Decapitator  crit,haste
+                                    Trinket                     Kul'tharok active                                       N
+
+Necrotic Wake
+                                    Trinket                     Surgeon Stitchflesh         passive
+
+
+
+
+Legendary:
+    Slick Ice -> Torghast - Mort'regar -> cat timp in Ice Veins -> fiecare frostbolt scade cooldown-ul cu 2% -> 20% faster frostbolt -> waist,legs                  got it
+                Memory of Slick Ice -> Layer 3+
+    Glacial Fragments -> Torghast - Coldheart Interstitia  -> aoe ice lance. damage dublu daca sta in blizzard tinta. Legs,Back
+                        Memory of Fragments of Ice -> Layer 3+
+    
+
+https://www.wowhead.com/guides/shadowlands-legendary-gear-crafting-upgrading
